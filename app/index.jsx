@@ -1,5 +1,5 @@
 /**
- * @author  xuruiqi
+ * @author  reetsee.com
  * @date    20160616
  * @desc    Please customize this homepage according to your needs
  */
