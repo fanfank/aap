@@ -26,11 +26,11 @@ class PageCtl {
                 url: PAGE_API.URL_GET_PAGE_LIST,
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8',
-                data: {
+                data: JSON.stringify({
                     ie: 'utf-8',
                     pn: pn,
                     rn: rn,
-                },
+                }),
                 success: function(data, status) {
                     if (basic.statusOk(status) !== ''
                             || basic.errnoOk(data) !== '') {
@@ -66,10 +66,10 @@ class PageCtl {
                     url: PAGE_API.URL_GET_PAGE,
                     dataType: 'json',
                     contentType: 'application/json;charset=utf-8',
-                    data: {
+                    data: JSON.stringify({
                         ie: 'utf-8',
                         id: pageId,
-                    },
+                    }),
                     success: function(data, status) {
                         if (basic.statusOk(status) !== ''
                                 || basic.errnoOk(data) !== '') {

@@ -29,10 +29,10 @@ class HeaderCtl {
                     url: HEADER_API.URL_GET_HEADER,
                     dataType: 'json',
                     contentType: 'application/json;charset=utf-8',
-                    data: {
+                    data: JSON.stringify({
                         ie: 'utf-8',
                         id: headerId,
-                    },
+                    }),
                     success: function(data, status) {
                         if (basic.statusOk(status) !== ''
                                 || basic.errnoOk(data) !== '') {

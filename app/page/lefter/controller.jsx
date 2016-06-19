@@ -30,10 +30,10 @@ class LefterCtl {
                     url: LEFTER_API.URL_GET_LEFTER,
                     dataType: 'json',
                     contentType: 'application/json;charset=utf-8',
-                    data: {
+                    data: JSON.stringify({
                         ie: 'utf-8',
                         id: lefterId,
-                    },
+                    }),
                     success: function(data, status) {
                         if (basic.statusOk(status) !== ''
                                 || basic.errnoOk(data) !== '') {
