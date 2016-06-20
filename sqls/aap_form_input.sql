@@ -4,7 +4,7 @@ create table `aap_form_input` (
     `display` varchar(512) NOT NULL COMMENT 'the label of this input',
     `pname` varchar(128) NOT NULL COMMENT 'the parameter name of the input',
     `help_message` varchar(4096) NOT NULL DEFAULT '' COMMENT 'help message of the input',
-    `attrs` text NOT NULL COMMENT 'additional attributes assigned by the user, a json string',
+    `assignedAttrs` text NOT NULL COMMENT 'additional attributes assigned by the user, a json string',
     `form_input_type` varchar(64) NOT NULL COMMENT 'type of the input',
     `detail` text NOT NULL COMMENT 'the detail configuration of this input, a json string',
     `op_user` varchar(128) NOT NULL DEFAULT 'UNKNOWN_USER' COMMENT 'user that last modifies this form input',
