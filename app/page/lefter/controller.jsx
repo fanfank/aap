@@ -28,12 +28,10 @@ class LefterCtl {
                 $.ajax({
                     type: 'GET',
                     url: LEFTER_API.URL_GET_LEFTER,
-                    dataType: 'json',
-                    contentType: 'application/json;charset=utf-8',
-                    data: JSON.stringify({
+                    data: {
                         ie: 'utf-8',
                         id: lefterId,
-                    }),
+                    },
                     success: function(data, status) {
                         if (basic.statusOk(status) !== ''
                                 || basic.errnoOk(data) !== '') {

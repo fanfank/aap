@@ -510,7 +510,7 @@ let MutablelistFormSubInput = React.createClass({
 
     computeSubInputList: function(props) {
         props = props || this.props;
-        let valueList = this.getCurrentValue(props) || [];
+        let valueList = this.getCurrentValue(props);
         if (valueList) {
             valueList = basic.decode(valueList);
             let subInputList = valueList.map((value, index) => {
@@ -637,42 +637,25 @@ let MutablelistFormSubInput = React.createClass({
 });
 
 // 可动态添加的子字典类型
-//TODO
 let MutabledictFormSubInput = React.createClass({
     mixins: [CommonSubInputMixin],
     getInitialState: function() {
         let subInputList = this.computeSubInputList(this.props);
-        const { formSubInputData: data } = this.props;
-        const defaultContent = basic.decode(data['default'], {});
-
-        if (subInputList.length != 0) {
-            return {
-                "subInputList": subInputList
-            };
-        } else {
-            return {
-                "subInputList": [
-                    //{
-                    //    "id": 0,
-                    //    "key": defaultContent["key"],
-                    //    "value": defaultContent["value"],
-                    //}
-                ],
-            };
-        }
+        return {
+            subInputList: subInputList
+        };
     },
 
     computeSubInputList: function(props) {
+        props = props || this.props;
         let kvDict = this.getCurrentValue(props);
         if (kvDict) {
-            if (typeof(kvDict) == "string") {
-                kvDict = JSON.parse(kvDict);
-            }
+            kvDict = basic.decode(kvDict, {});
             let subInputList = basic.keys(kvDict).map((key, index) => {
                 return {
-                    "id": index,
-                    "key": key,
-                    "value": kvDict[key],
+                    id: index,
+                    key: key,
+                    value: kvDict[key],
                 }
             });
             return subInputList;
@@ -685,42 +668,42 @@ let MutabledictFormSubInput = React.createClass({
         if (nextProps.subInputValue != this.props.subInputValue) {
             let subInputList = this.computeSubInputList(nextProps);
             this.setState({
-                "subInputList": subInputList,
+                subInputList: subInputList,
             });
         }
     },
 
     add: function() {
         const { formSubInputData: data } = this.props;
-        const defaultContent = basic.decode(data["default"], {});
+        const defaultContent = basic.decode(data['default'], {});
 
         let newList = this.state.subInputList.concat({
-            "id": this.state.subInputList.length,
-            "key": defaultContent["key"],
-            "value": defaultContent["value"],
+            id: this.state.subInputList.length,
+            key: defaultContent['key'],
+            value: defaultContent['value'],
         });
         this.setState({
-            "subInputList": newList
+            subInputList: newList
         });
     },
 
     remove: function(targetId) {
         let newList = this.state.subInputList.filter((subInput) => {
-            return subInput["id"] != targetId;
+            return subInput['id'] != targetId;
         });
 
         // 维护newList中的id
         for (let i = 0; i < newList.length; ++i) {
-            newList[i]["id"] = i;
+            newList[i]['id'] = i;
         }
 
         this.setState(
             {
-                "subInputList": newList,
+                subInputList: newList,
             },
             () => {
-                this.updateKey("", "");
-                this.updateValue("", "");
+                this.updateKey('', '');
+                this.updateValue('', '');
             }
         );
     },
@@ -732,20 +715,16 @@ let MutabledictFormSubInput = React.createClass({
         let kvDict = {};
         this.state.subInputList.forEach((subInput, index, arr) => {
             let newInput = {
-                "id": subInput["id"],
-                "key": subInput["key"],
-                "value": subInput["value"],
+                id: subInput['id'],
+                key: subInput['key'],
+                value: subInput['value'],
             };
 
-            if (newInput["id"] == parseInt(targetId)) {
+            if (newInput['id'] == parseInt(targetId)) {
                 newInput[targetField] = targetContent;
             }
 
-            //if ((newInput["key"] && newInput["key"] != "")
-                    //|| (newInput["value"] && newInput["value"] != "")) {
-
-                kvDict[newInput["key"]] = newInput["value"];
-            //}
+            kvDict[newInput['key']] = newInput['value'];
 
             newList.push(newInput);
         });
@@ -757,45 +736,45 @@ let MutabledictFormSubInput = React.createClass({
         );
 
         this.setState({
-            "subInputList": newList
+            subInputList: newList
         });
     },
 
     updateKey: function(targetId, targetKey) {
-        this._update(targetId, targetKey, "key");
+        this._update(targetId, targetKey, 'key');
     },
 
     updateValue: function(targetId, targetValue) {
-        this._update(targetId, targetValue, "value");
+        this._update(targetId, targetValue, 'value');
     },
 
     render: function() {
         const { formSubInputData: data, noLabel, prefix } = this.props;
-        const detailContent = basic.decode(data["detail"]);
+        const detailContent = basic.decode(data['detail']);
         const thisInput = this;
 
         const subInputs = this.state.subInputList.map((subInput) => {
             return (
-                <Form.Item key={subInput["id"]}>
+                <Form.Item key={subInput['id']}>
                     <FormSubInput
                         noLabel={noLabel}
                         params={this.props.params}
-                        subInputId={subInput["id"]}
-                        subInputValue={subInput["key"]}
-                        prefix={`${prefix}_key_${data["pname"]}_${subInput["id"]}_`}
+                        subInputId={subInput['id']}
+                        subInputValue={subInput['key']}
+                        prefix={`${prefix}_key_${data['pname']}_${subInput['id']}_`}
                         changeCallback={thisInput.updateKey}
-                        formSubInput={detailContent["key_sub_input"]} />
+                        formSubInput={detailContent['key_sub_input']} />
 
                     <FormSubInput
                         noLabel={noLabel}
                         params={this.props.params}
-                        subInputId={subInput["id"]}
-                        subInputValue={subInput["value"]}
-                        prefix={`${prefix}_value_${data["pname"]}_${subInput["id"]}_`}
+                        subInputId={subInput['id']}
+                        subInputValue={subInput['value']}
+                        prefix={`${prefix}_value_${data['pname']}_${subInput['id']}_`}
                         changeCallback={thisInput.updateValue}
-                        formSubInput={detailContent["value_sub_input"]} />
+                        formSubInput={detailContent['value_sub_input']} />
 
-                    <Button onClick={() => thisInput.remove(subInput["id"])}>删除</Button>
+                    <Button onClick={() => thisInput.remove(subInput['id'])}>删除</Button>
                 </Form.Item>
             );
         });
@@ -803,7 +782,7 @@ let MutabledictFormSubInput = React.createClass({
         return (
             <Form.Item
                 extra={this.getExtraMessage()}
-                label={!noLabel && data["display"]}>
+                label={!noLabel && data['display']}>
 
                 {subInputs}
                 <Button onClick={thisInput.add}>添加</Button>
@@ -817,12 +796,11 @@ let MutabledictFormSubInput = React.createClass({
 let JsonFormSubInput = React.createClass({
     mixins: [CommonSubInputMixin],
     getInitialState: function() {
-        const { fieldData: fill, formSubInputData: data } = this.props;
-
         return {
-            "submitValue": basic.decode(this.getCurrentValue()),
+            submitValue: basic.decode(this.getCurrentValue()),
         };
     },
+
     update(key, value) {
         const { formSubInputData: data, subInputId } = this.props;
 
@@ -830,27 +808,27 @@ let JsonFormSubInput = React.createClass({
         submitValue[key] = value;
 
         this.setState({
-            "submitValue": submitValue,
+            submitValue: submitValue,
         });
 
         this.props.changeCallback(subInputId, submitValue);
     },
+
     componentWillReceiveProps: function(nextProps) {
         if (nextProps != this.props) {
-            const { fieldData: fill, formSubInputData: data } = nextProps;
-
             this.setState({
-                submitValue: basic.decode(this.getCurrentValue()),
+                submitValue: basic.decode(this.getCurrentValue(nextProps)),
             });
         }
     },
-    render: function() {
-        const { fieldData: fill, formSubInputData: data, noLabel } = this.props;
-        const { submitValue } = this.state;
-        const detailContent = basic.decode(data["detail"]);
 
-        let inputList = basic.keys(detailContent["structure"]).map((key) => {
-            let value = detailContent["structure"][key];
+    render: function() {
+        const { remoteData, formSubInputData: data, noLabel } = this.props;
+        const { submitValue } = this.state;
+        const detailContent = basic.decode(data['detail']);
+
+        let inputList = basic.keys(detailContent['structure']).map((key) => {
+            let value = detailContent['structure'][key];
             return (
                 <JsonField
                     key={key}
@@ -865,7 +843,7 @@ let JsonFormSubInput = React.createClass({
         return (
             <Form.Item
                 extra={this.getExtraMessage()}
-                label={!noLabel && data["display"]}>
+                label={!noLabel && data['display']}>
 
                 {inputList}
             </Form.Item>

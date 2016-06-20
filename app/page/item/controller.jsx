@@ -37,12 +37,10 @@ class ItemCtl {
                 $.ajax({
                     type: 'GET',
                     url: ITEM_API.URL_GET_ITEM,
-                    dataType: 'json',
-                    contentType: 'application/json;charset=utf-8',
-                    data: JSON.stringify({
+                    data: {
                         ie: 'utf-8',
                         id: itemId,
-                    }),
+                    },
                     success: function(data, status) {
                         if (basic.statusOk(status) !== ''
                                 || basic.errnoOk(data) !== '') {
@@ -78,13 +76,11 @@ class ItemCtl {
             $.ajax({
                 type: 'GET',
                 url: ITEM_API.URL_GET_ITEM_LIST,
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                data: JSON.stringify({
-                    'ie': 'utf-8',
-                    'pn': pn,
-                    'rn': rn,
-                }),
+                data: {
+                    ie: 'utf-8',
+                    pn: pn,
+                    rn: rn,
+                },
                 success: function(data, status) {
                     if (basic.statusOk(status) !== ''
                             || basic.errnoOk(data) !== '') {

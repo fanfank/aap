@@ -39,12 +39,10 @@ class FormInputCtl {
                 $.ajax({
                     type: 'GET',
                     url: FORM_INPUT_API.URL_GET_FORM_INPUT,
-                    dataType: 'json',
-                    contentType: 'application/json;charset=utf-8',
-                    data: JSON.stringify({
+                    data: {
                         ie: "utf-8",
                         id: formItemId,
-                    }),
+                    },
                     success: function(data, status) {
                         if (basic.statusOk(status) !== ""
                                 || basic.errnoOk(data) !== "") {
@@ -84,8 +82,6 @@ class FormInputCtl {
             $.ajax({
                 type: 'GET',
                 url: FORM_INPUT_API.URL_GET_FORM_INPUT_LIST,
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
                 data: {
                     ie: "utf-8",
                     pn: pn,

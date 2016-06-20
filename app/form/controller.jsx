@@ -27,12 +27,10 @@ class FormCtl {
                 $.ajax({
                     type: 'GET',
                     url: FORM_API.URL_GET_FORM,
-                    dataType: 'json',
-                    contentType: 'application/json;charset=utf-8',
-                    data: JSON.stringify({
+                    data: {
                         ie: 'utf-8',
                         id: formId,
-                    }),
+                    },
                     success: function(data, status) {
                         if (basic.statusOk(status) !== ''
                                 || basic.errnoOk(data) !== '') {
