@@ -196,18 +196,22 @@ function getSqlPart(tuples, type, seperator) {
         var escapedTuples = basic.keys(tuples).map(function(key) {
             var value = tuples[key];
             var part = escapeString(key) ;
+
             if (typeof(value) == 'string') {
                 part += mysql.escape(value);
             } else if (Array.isArray(value)) {
+                var escapedValue = [];
                 for (var i = 0; i < value.length; ++i) {
-                    if (Array.isArray(value[i])) {
+                    var v = value[i];
+                    if (Array.isArray(v)) {
                         fatal = true;
                         return false; // NOTE:not function return
-                    } else if (typeof(value[i]) == 'string') {
-                        value[i] = mysql.escape(value[i]);
+                    } else if (typeof(v) == 'string') {
+                        v = mysql.escape(v);
                     }
+                    escapedValue.push(v);
                 }
-                part += ' (' + value.join(',') + ')';
+                part += ' (' + escapedValue.join(',') + ')';
             } else {
                 part += value;
             }
