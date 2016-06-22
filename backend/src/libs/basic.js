@@ -3,7 +3,7 @@
  * @date    20160621
  */
 
-exports.safeGet = function (data, fieldPath, defaultValue) {
+function safeGet(data, fieldPath, defaultValue) {
     var targetFieldValue = data;
     for (var i = 0; i < fieldPath.length; ++i) {
         if (!targetFieldValue || typeof(targetFieldValue) !== "object") {
@@ -16,12 +16,14 @@ exports.safeGet = function (data, fieldPath, defaultValue) {
     }
     return targetFieldValue;
 };
+exports.safeGet = safeGet;
 
-exports.lz = function (content) {
+function lz(content) {
     return content.length === 0;
 };
+exports.lz = lz;
 
-exports.decode = function(jstr, defaultValue) {
+function decode(jstr, defaultValue) {
     if (!jstr) {
         return defaultValue;
     } else if (typeof(jstr) == "object") {
@@ -32,6 +34,7 @@ exports.decode = function(jstr, defaultValue) {
         return JSON.parse(jstr);
     }
 };
+exports.decode = decode;
 
 function encode(jobj) {
     if (!jobj) {
@@ -46,7 +49,7 @@ function encode(jobj) {
 };
 exports.encode = encode;
 
-exports.keys = function(obj) {
+function keys(obj) {
     var keys = [];
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -55,8 +58,9 @@ exports.keys = function(obj) {
     }
     return keys;
 };
+exports.keys = keys;
 
-exports.values = function(obj) {
+function values(obj) {
     var values = [];
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -65,17 +69,32 @@ exports.values = function(obj) {
     }
     return values;
 };
+exports.values = values;
 
-exports.isVoid = function(t) {
+function isVoid(t) {
     return t === undefined || t === null;
 };
+exports.isVoid = isVoid;
 
-exports.jsonResp = function(res, data) {
+function jsonResp(res, data) {
     console.log(encode(data));
     res.json(data);
 };
+exports.jsonResp = jsonResp;
 
 function ts() {
     return Math.floor(Date.now() / 1000);
-}
-exports.ts = ts
+};
+exports.ts = ts;
+
+function buildFieldDict(r, fieldList) {
+    var resDict = {};
+    fieldList.forEach(function(field) {
+        var val = safeGet(r, [field]);
+        if (!isVoid(val)) {
+            resDict[field] = val;
+        }
+    });
+    return resDict;
+};
+exports.buildFieldDict = buildFieldDict;

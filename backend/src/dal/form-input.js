@@ -1,6 +1,6 @@
 /**
  * @author  reetsee.com
- * @date    20160621
+ * @date    20160623
  */
 var path = require('path');
 var ROOT_PATH = path.resolve(__dirname, '..');
@@ -14,21 +14,22 @@ var db = require(ROOT_PATH + '/db');
 var readPool = db.readPool;
 var writePool = db.writePool;
 
-var PAGE_FIELDS = [
-    'id', 'name', 'title', 'components', 'content', 'urlmark',
-    'page_type', 'op_user', 'ctime', 'mtime', 'ext'
+var FORM_INPUT_FIELDS = [
+    'id', 'name', 'display', 'pname', 'help_message', 'assignedAttrs',
+    'form_input_type', 'detail', 'op_user', 'ctime', 'mtime', 'ext',
 ];
-var PAGE_TABLE = 'aap_page';
+var FORM_INPUT_TABLE = 'aap_form_input';
 
-exports.addPage = function(r, cb) {
+exports.addFormInput = function(r, cb) {
     r.ctime = r.mtime = basic.ts();
     var sql = sqlBuilder.getSqlInsert(
-        PAGE_TABLE,
+        FORM_INPUT_TABLE,
         buildFieldDict(
             r,
             [
-                'name', 'title', 'components', 'content', 'page_type', 
-                'op_user', 'urlmark', 'ctime', 'mtime', 'ext'
+                'name', 'display', 'pname', 'help_message', 
+                'assignedAttrs', 'form_input_type', 'detail', 
+                'op_user', 'ctime', 'mtime', 'ext',
             ]
         )
     );
@@ -38,21 +39,22 @@ exports.addPage = function(r, cb) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Add page failed', data: err });
+            cb({ errno: -1, errmsg: 'Add form input failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.modifyPage = function(r, cb) {
+exports.modifyFormInput = function(r, cb) {
     r.mtime = basic.ts();
     var sql = sqlBuilder.getSqlUpdate(
-        PAGE_TABLE,
+        FORM_INPUT_TABLE,
         buildFieldDict(
             r, 
             [
-                'name', 'title', 'components', 'content', 'page_type', 
-                'op_user', 'urlmark', 'ctime', 'mtime', 'ext'
+                'name', 'display', 'pname', 'help_message', 
+                'assignedAttrs', 'form_input_type', 'detail', 
+                'op_user', 'ctime', 'mtime', 'ext',
             ]
         ),
         {
@@ -65,15 +67,15 @@ exports.modifyPage = function(r, cb) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Modify page failed', data: err });
+            cb({ errno: -1, errmsg: 'Modify form input failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.deletePage = function(r, cb) {
+exports.deleteFormInput = function(r, cb) {
     var sql = sqlBuilder.getSqlDelete(
-        PAGE_TABLE,
+        FORM_INPUT_TABLE,
         {
             'id=': r.id,
         } 
@@ -84,17 +86,17 @@ exports.deletePage = function(r, cb) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Delete page failed', data: err });
+            cb({ errno: -1, errmsg: 'Delete form input failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.getPageList = function(r, cb) {
+exports.getFormInputList = function(r, cb) {
     // FIXME xuruiqi: this callback in callback is ugly
 
     // 先查出记录总数
-    var sql = 'SELECT COUNT(*) AS total FROM ' + PAGE_TABLE;
+    var sql = 'SELECT COUNT(*) AS total FROM ' + FORM_INPUT_TABLE;
     readPool.query(sql, function(err, rows, fields) {
         if (!err) {
             total = rows[0].total;
@@ -106,19 +108,18 @@ exports.getPageList = function(r, cb) {
             }
 
             var sql = sqlBuilder.getSqlSelect(
-                PAGE_TABLE,
-                PAGE_FIELDS,
+                FORM_INPUT_TABLE,
+                FORM_INPUT_FIELDS,
                 conds,
                 ' ORDER BY `id` DESC LIMIT ' 
                     + r.rn + ' OFFSET ' + (r.rn * (r.pn - 1))
             );
-            console.log(sql);
 
             readPool.query(sql, function(err, rows, fields) {
                 if (err) {
                     cb({ 
                         errno: -1, 
-                        errmsg: 'Get page list failed', 
+                        errmsg: 'Get form input list failed', 
                         data: err 
                     });
                     console.log(err);
@@ -131,16 +132,16 @@ exports.getPageList = function(r, cb) {
                         rn: r.rn,
                         total: total,
                     },
-                    page_list: [],
+                    form_input_list: [],
                 };
 
-                rows.forEach(function(page) {
-                    var copiedPage = buildFieldDict(
-                        page,
-                        PAGE_FIELDS
+                rows.forEach(function(formInput) {
+                    var copiedFormInput = buildFieldDict(
+                        formInput,
+                        FORM_INPUT_FIELDS
                     )
 
-                    data['page_list'].push(copiedPage);
+                    data['form_input_list'].push(copiedFormInput);
                 });
 
                 cb({
@@ -154,7 +155,7 @@ exports.getPageList = function(r, cb) {
         } else {
             cb({ 
                 errno: -1, 
-                errmsg: 'Get page count failed', 
+                errmsg: 'Get form input count failed', 
                 data: err 
             });
             console.log(err);
@@ -162,19 +163,20 @@ exports.getPageList = function(r, cb) {
     });
 };
 
-exports.getPage = function(r, cb) {
+exports.getFormInput = function(r, cb) {
     var sql = sqlBuilder.getSqlSelect(
-        PAGE_TABLE,
-        PAGE_FIELDS,
+        FORM_INPUT_TABLE,
+        FORM_INPUT_FIELDS,
         {
             'id=': r.id
         }
     );
+
     readPool.query(sql, function(err, rows, fields) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {
             cb({
                 errno: -1,
-                errmsg: 'Page ' + r.id + ' not exists',
+                errmsg: 'Form input ' + r.id + ' not exists',
                 data: err,
             });
             return;
@@ -183,17 +185,18 @@ exports.getPage = function(r, cb) {
             cb({
                 errno: 0,
                 errmsg: 'success',
-                data: buildFieldDict(rows[0], PAGE_FIELDS),
+                data: buildFieldDict(rows[0], FORM_INPUT_FIELDS),
             });
             return;
 
         } else {
             cb({
                 errno: -1,
-                errmsg: 'Get page failed',
+                errmsg: 'Get form input failed',
             });
             console.log(err);
             return;
         }
     });
+
 };

@@ -1,6 +1,6 @@
 /**
  * @author  reetsee.com
- * @date    20160621
+ * @date    20160623
  */
 var path = require('path');
 var ROOT_PATH = path.resolve(__dirname, '..');
@@ -14,45 +14,44 @@ var db = require(ROOT_PATH + '/db');
 var readPool = db.readPool;
 var writePool = db.writePool;
 
-var PAGE_FIELDS = [
-    'id', 'name', 'title', 'components', 'content', 'urlmark',
-    'page_type', 'op_user', 'ctime', 'mtime', 'ext'
+var LEFTER_FIELDS = [
+    'id', 'name', 'components', 'op_user', 
+    'ctime', 'mtime', 'ext',
 ];
-var PAGE_TABLE = 'aap_page';
+var LEFTER_TABLE = 'aap_lefter';
 
-exports.addPage = function(r, cb) {
+exports.addLefter = function(r, cb) {
     r.ctime = r.mtime = basic.ts();
     var sql = sqlBuilder.getSqlInsert(
-        PAGE_TABLE,
+        LEFTER_TABLE,
         buildFieldDict(
             r,
             [
-                'name', 'title', 'components', 'content', 'page_type', 
-                'op_user', 'urlmark', 'ctime', 'mtime', 'ext'
+                'name', 'components', 'op_user',
+                'ctime', 'mtime', 'ext',
             ]
         )
     );
-
     writePool.query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Add page failed', data: err });
+            cb({ errno: -1, errmsg: 'Add lefter failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.modifyPage = function(r, cb) {
+exports.modifyLefter = function(r, cb) {
     r.mtime = basic.ts();
     var sql = sqlBuilder.getSqlUpdate(
-        PAGE_TABLE,
+        LEFTER_TABLE,
         buildFieldDict(
             r, 
             [
-                'name', 'title', 'components', 'content', 'page_type', 
-                'op_user', 'urlmark', 'ctime', 'mtime', 'ext'
+                'name', 'components', 'op_user',
+                'ctime', 'mtime', 'ext',
             ]
         ),
         {
@@ -65,15 +64,15 @@ exports.modifyPage = function(r, cb) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Modify page failed', data: err });
+            cb({ errno: -1, errmsg: 'Modify lefter failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.deletePage = function(r, cb) {
+exports.deleteLefter = function(r, cb) {
     var sql = sqlBuilder.getSqlDelete(
-        PAGE_TABLE,
+        LEFTER_TABLE,
         {
             'id=': r.id,
         } 
@@ -84,17 +83,17 @@ exports.deletePage = function(r, cb) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Delete page failed', data: err });
+            cb({ errno: -1, errmsg: 'Delete lefter failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.getPageList = function(r, cb) {
+exports.getLefterList = function(r, cb) {
     // FIXME xuruiqi: this callback in callback is ugly
 
     // 先查出记录总数
-    var sql = 'SELECT COUNT(*) AS total FROM ' + PAGE_TABLE;
+    var sql = 'SELECT COUNT(*) AS total FROM ' + LEFTER_TABLE;
     readPool.query(sql, function(err, rows, fields) {
         if (!err) {
             total = rows[0].total;
@@ -106,8 +105,8 @@ exports.getPageList = function(r, cb) {
             }
 
             var sql = sqlBuilder.getSqlSelect(
-                PAGE_TABLE,
-                PAGE_FIELDS,
+                LEFTER_TABLE,
+                LEFTER_FIELDS,
                 conds,
                 ' ORDER BY `id` DESC LIMIT ' 
                     + r.rn + ' OFFSET ' + (r.rn * (r.pn - 1))
@@ -118,7 +117,7 @@ exports.getPageList = function(r, cb) {
                 if (err) {
                     cb({ 
                         errno: -1, 
-                        errmsg: 'Get page list failed', 
+                        errmsg: 'Get lefter list failed', 
                         data: err 
                     });
                     console.log(err);
@@ -131,16 +130,16 @@ exports.getPageList = function(r, cb) {
                         rn: r.rn,
                         total: total,
                     },
-                    page_list: [],
+                    lefter_list: [],
                 };
 
-                rows.forEach(function(page) {
-                    var copiedPage = buildFieldDict(
-                        page,
-                        PAGE_FIELDS
+                rows.forEach(function(lefter) {
+                    var copiedLefter = buildFieldDict(
+                        lefter,
+                        LEFTER_FIELDS
                     )
 
-                    data['page_list'].push(copiedPage);
+                    data['lefter_list'].push(copiedLefter);
                 });
 
                 cb({
@@ -154,7 +153,7 @@ exports.getPageList = function(r, cb) {
         } else {
             cb({ 
                 errno: -1, 
-                errmsg: 'Get page count failed', 
+                errmsg: 'Get lefter count failed', 
                 data: err 
             });
             console.log(err);
@@ -162,10 +161,10 @@ exports.getPageList = function(r, cb) {
     });
 };
 
-exports.getPage = function(r, cb) {
+exports.getLefter = function(r, cb) {
     var sql = sqlBuilder.getSqlSelect(
-        PAGE_TABLE,
-        PAGE_FIELDS,
+        LEFTER_TABLE,
+        LEFTER_FIELDS,
         {
             'id=': r.id
         }
@@ -174,7 +173,7 @@ exports.getPage = function(r, cb) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {
             cb({
                 errno: -1,
-                errmsg: 'Page ' + r.id + ' not exists',
+                errmsg: 'Lefter ' + r.id + ' not exists',
                 data: err,
             });
             return;
@@ -183,17 +182,18 @@ exports.getPage = function(r, cb) {
             cb({
                 errno: 0,
                 errmsg: 'success',
-                data: buildFieldDict(rows[0], PAGE_FIELDS),
+                data: buildFieldDict(rows[0], LEFTER_FIELDS),
             });
             return;
 
         } else {
             cb({
                 errno: -1,
-                errmsg: 'Get page failed',
+                errmsg: 'Get lefter failed',
             });
             console.log(err);
             return;
         }
     });
+
 };

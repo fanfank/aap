@@ -1,6 +1,6 @@
 /**
  * @author  reetsee.com
- * @date    20160621
+ * @date    20160623
  */
 var path = require('path');
 var ROOT_PATH = path.resolve(__dirname, '..');
@@ -14,45 +14,44 @@ var db = require(ROOT_PATH + '/db');
 var readPool = db.readPool;
 var writePool = db.writePool;
 
-var PAGE_FIELDS = [
-    'id', 'name', 'title', 'components', 'content', 'urlmark',
-    'page_type', 'op_user', 'ctime', 'mtime', 'ext'
+var ITEM_FIELDS = [
+    'id', 'name', 'item_type', 'display', 'icon', 'detail',
+    'op_user', 'ctime', 'mtime', 'ext',
 ];
-var PAGE_TABLE = 'aap_page';
+var ITEM_TABLE = 'aap_item';
 
-exports.addPage = function(r, cb) {
+exports.addItem = function(r, cb) {
     r.ctime = r.mtime = basic.ts();
     var sql = sqlBuilder.getSqlInsert(
-        PAGE_TABLE,
+        ITEM_TABLE,
         buildFieldDict(
             r,
             [
-                'name', 'title', 'components', 'content', 'page_type', 
-                'op_user', 'urlmark', 'ctime', 'mtime', 'ext'
+                'name', 'item_type', 'display', 'icon', 'detail',
+                'op_user', 'ctime', 'mtime', 'ext',
             ]
         )
     );
-
     writePool.query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Add page failed', data: err });
+            cb({ errno: -1, errmsg: 'Add item failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.modifyPage = function(r, cb) {
+exports.modifyItem = function(r, cb) {
     r.mtime = basic.ts();
     var sql = sqlBuilder.getSqlUpdate(
-        PAGE_TABLE,
+        ITEM_TABLE,
         buildFieldDict(
             r, 
             [
-                'name', 'title', 'components', 'content', 'page_type', 
-                'op_user', 'urlmark', 'ctime', 'mtime', 'ext'
+                'name', 'item_type', 'display', 'icon', 'detail',
+                'op_user', 'ctime', 'mtime', 'ext',
             ]
         ),
         {
@@ -65,15 +64,15 @@ exports.modifyPage = function(r, cb) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Modify page failed', data: err });
+            cb({ errno: -1, errmsg: 'Modify item failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.deletePage = function(r, cb) {
+exports.deleteItem = function(r, cb) {
     var sql = sqlBuilder.getSqlDelete(
-        PAGE_TABLE,
+        ITEM_TABLE,
         {
             'id=': r.id,
         } 
@@ -84,17 +83,17 @@ exports.deletePage = function(r, cb) {
             cb({ errno: 0, errmsg: 'success' });
             return;
         } else {
-            cb({ errno: -1, errmsg: 'Delete page failed', data: err });
+            cb({ errno: -1, errmsg: 'Delete item failed', data: err });
             console.log(err);
         }
     });
 };
 
-exports.getPageList = function(r, cb) {
+exports.getItemList = function(r, cb) {
     // FIXME xuruiqi: this callback in callback is ugly
 
     // 先查出记录总数
-    var sql = 'SELECT COUNT(*) AS total FROM ' + PAGE_TABLE;
+    var sql = 'SELECT COUNT(*) AS total FROM ' + ITEM_TABLE;
     readPool.query(sql, function(err, rows, fields) {
         if (!err) {
             total = rows[0].total;
@@ -106,19 +105,18 @@ exports.getPageList = function(r, cb) {
             }
 
             var sql = sqlBuilder.getSqlSelect(
-                PAGE_TABLE,
-                PAGE_FIELDS,
+                ITEM_TABLE,
+                ITEM_FIELDS,
                 conds,
                 ' ORDER BY `id` DESC LIMIT ' 
                     + r.rn + ' OFFSET ' + (r.rn * (r.pn - 1))
             );
-            console.log(sql);
 
             readPool.query(sql, function(err, rows, fields) {
                 if (err) {
                     cb({ 
                         errno: -1, 
-                        errmsg: 'Get page list failed', 
+                        errmsg: 'Get item list failed', 
                         data: err 
                     });
                     console.log(err);
@@ -131,16 +129,16 @@ exports.getPageList = function(r, cb) {
                         rn: r.rn,
                         total: total,
                     },
-                    page_list: [],
+                    item_list: [],
                 };
 
-                rows.forEach(function(page) {
-                    var copiedPage = buildFieldDict(
-                        page,
-                        PAGE_FIELDS
+                rows.forEach(function(item) {
+                    var copiedItem = buildFieldDict(
+                        item,
+                        ITEM_FIELDS
                     )
 
-                    data['page_list'].push(copiedPage);
+                    data['item_list'].push(copiedItem);
                 });
 
                 cb({
@@ -154,7 +152,7 @@ exports.getPageList = function(r, cb) {
         } else {
             cb({ 
                 errno: -1, 
-                errmsg: 'Get page count failed', 
+                errmsg: 'Get item count failed', 
                 data: err 
             });
             console.log(err);
@@ -162,10 +160,10 @@ exports.getPageList = function(r, cb) {
     });
 };
 
-exports.getPage = function(r, cb) {
+exports.getItem = function(r, cb) {
     var sql = sqlBuilder.getSqlSelect(
-        PAGE_TABLE,
-        PAGE_FIELDS,
+        ITEM_TABLE,
+        ITEM_FIELDS,
         {
             'id=': r.id
         }
@@ -174,7 +172,7 @@ exports.getPage = function(r, cb) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {
             cb({
                 errno: -1,
-                errmsg: 'Page ' + r.id + ' not exists',
+                errmsg: 'Item ' + r.id + ' not exists',
                 data: err,
             });
             return;
@@ -183,14 +181,14 @@ exports.getPage = function(r, cb) {
             cb({
                 errno: 0,
                 errmsg: 'success',
-                data: buildFieldDict(rows[0], PAGE_FIELDS),
+                data: buildFieldDict(rows[0], ITEM_FIELDS),
             });
             return;
 
         } else {
             cb({
                 errno: -1,
-                errmsg: 'Get page failed',
+                errmsg: 'Get item failed',
             });
             console.log(err);
             return;
