@@ -45,18 +45,19 @@ exports.entrance = function(req, res, next) {
 function addPage(req, res) {
     title = req.query.title || '';
     name = req.query.name || '';
+    urlmark = req.query.urlmark || '';
     components = req.query.components || '{}';
     content = req.query.content || '{}';
     type = req.query.type || 0;
     op_user = req.query.op_user || 'guest';
     ext = req.query.ext || '';
 
-    if (lz(page_name) || lz(components) || lz(content)) {
+    if (lz(name) || lz(components) || lz(content)) {
         jr(res, {
             'errno': -1,
             'errmsg': 'invalid params',
             'data': {
-                'name': page_name,
+                'name': name,
                 'components': components,
                 'content': content
             }
@@ -64,56 +65,167 @@ function addPage(req, res) {
         return;
     }
 
-    addPageReq = {
+    rq = {
         "title": title,
-        "name": page_name,
+        "name": name,
         "components": components,
         "content": content,
+        "urlmark": urlmark,
         "type": type,
         "op_user": op_user,
         "ext": ext,
     };
 
     // 插入数据库
-    addPageRes = pageDal.addPage(addPageReq, function(addPageRes) => {
-
-        jr(res, addPageRes);
+    pageDal.addPage(rq, function(rsp) {
+        jr(res, rsp);
     });
-}
+};
 
 function modifyPage(req, res) {
+    id = req.query.id || 0;
+    title = req.query.title || '';
+    name = req.query.name || '';
+    urlmark = req.query.urlmark || '';
+    components = req.query.components || '{}';
+    content = req.query.content || '{}';
+    type = req.query.type || 0;
+    op_user = req.query.op_user || 'guest';
+    ext = req.query.ext || '';
 
-}
+    if (lz(name) || lz(components) || lz(content) || id <= 0) {
+        jr(res, {
+            'errno': -1,
+            'errmsg': 'invalid params',
+            'data': {
+                'id': id,
+                'name': name,
+                'components': components,
+                'content': content
+            }
+        });
+        return;
+    }
+
+    rq = {
+        "id": id,
+        "title": title,
+        "name": name,
+        "components": components,
+        "content": content,
+        "urlmark": urlmark,
+        "type": type,
+        "op_user": op_user,
+        "ext": ext,
+    }
+
+    // 修改数据库
+    pageDal.modifyPage(rq, function(rsp) {
+        jr(res, rsp);
+    });
+};
 
 function deletePage(req, res) {
+    id = req.query.id || 0;
 
-}
+    if (id <= 0) {
+        jr({
+            errno: -1,
+            errmsg: 'invalid params',
+            data: {
+                id: id,
+            }
+        });
+        return;
+    }
+
+    rq = {
+        "id": id,
+    };
+
+    // 从数据库删除
+    pageDal.deletePage(rq, function(rsp) {
+        jr(res, rsp);
+    });
+};
 
 function getPage(req, res) {
     id = req.query.id || 0;
     
-    if id <= 0:
-        return jr(res, {
+    if (id <= 0) {
+        jr(res, {
             "errno": 0,
             "errmsg": "success",
             "data": {
                 "id": id,
             }
         });
+        return;
+    }
 
-    getPageReq = {
+    var rq = {
         "id": id,
     };
 
-    getPageRes = pageDal.getPage(getPageReq);
-
-    jr(res, getPageRes);
-}
+    pageDal.getPage(rq, function(rsp) {
+        jr(res, rsp);
+    });
+};
 
 function getPageList(req, res) {
+    pn = req.query.pn || 0;
+    rn = req.query.rn || 0;
+    user = req.query.user;
 
-}
+    if (pn <= 0) {
+        pn = 1;
+    }
+    if (rn <= 0) {
+        rn = 10;
+    }
+    if (rn > 500) {
+        rn = 500;
+    }
+
+    rq = {
+        pn: pn,
+        rn: rn,
+        op_user: user
+    };
+    
+    pageDal.getPageList(rq, function(rsp) {
+        jr(res, rsp);
+    });
+};
 
 function getPageSuggestList(req, res) {
+    user = req.query.user || '';
+    rq = {
+        pn: 1,
+        rn: 200,
+        op_user: user,
+    };
 
-}
+    pageDal.getPageList(rq, function(rsp) {
+        if (rsp['errno'] != 0) {
+            jr(res, rsp);
+            return;
+        }
+
+        suggestList = [];
+        rsp['data']['page_list'].forEach(function(page) {
+            suggestList.push({
+                display: page['page_name'],
+                value: page['id'],
+            });
+        });
+
+        jr(res, {
+            errno: 0,
+            errmsg: 'success',
+            data: {
+                suggest_list: suggestList,
+            },
+        });
+    });
+};

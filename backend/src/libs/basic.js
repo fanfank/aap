@@ -33,7 +33,7 @@ exports.decode = function(jstr, defaultValue) {
     }
 };
 
-exports.encode = function(jobj) {
+function encode(jobj) {
     if (!jobj) {
         return null;
     } else if (typeof(jobj) == "string") {
@@ -44,10 +44,11 @@ exports.encode = function(jobj) {
         return JSON.stringify(jobj);
     }
 };
+exports.encode = encode;
 
 exports.keys = function(obj) {
-    let keys = [];
-    for (let key in obj) {
+    var keys = [];
+    for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
             keys.push(key);
         }
@@ -56,8 +57,8 @@ exports.keys = function(obj) {
 };
 
 exports.values = function(obj) {
-    let values = [];
-    for (let key in obj) {
+    var values = [];
+    for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
             values.push(obj[key]);
         }
@@ -70,6 +71,11 @@ exports.isVoid = function(t) {
 };
 
 exports.jsonResp = function(res, data) {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8;');
-    res.send(encode(data));
+    console.log(encode(data));
+    res.json(data);
 };
+
+function ts() {
+    return Math.floor(Date.now() / 1000);
+}
+exports.ts = ts

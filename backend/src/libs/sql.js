@@ -2,6 +2,7 @@
  * @author  reetsee.com
  * @date    20160621
  */
+var basic = require('./basic');
 var mysql = require('mysql');
 
 // SQL schemes
@@ -30,7 +31,7 @@ var SQL_PART_VALUE   = 2;
 var SQL_PART_COMBINE = 3;
 var SQL_PART_SET     = 4;
 
-exports.escapeString = function(val, forbidQualified) {
+function escapeString(val, forbidQualified) {
   if (Array.isArray(val)) {
     var sql = '';
 
@@ -80,7 +81,7 @@ exports.getSqlSelect = function(table, fields, conds, appends, options) {
     return sqlPartList.join(' ');
 };
 
-exports.getSqlUpdate(table, fields, conds, appends, options) {
+exports.getSqlUpdate = function(table, fields, conds, appends, options) {
     var sqlPartList = ['UPDATE'];
 
     // options
@@ -112,7 +113,7 @@ exports.getSqlUpdate(table, fields, conds, appends, options) {
     return sqlPartList.join(' ');
 };
 
-exports.getSqlDelete(table, conds, appends, options) {
+exports.getSqlDelete = function(table, conds, appends, options) {
     var sqlPartList = ['DELETE'];
 
     // options
@@ -155,7 +156,7 @@ exports.getSqlInsert = function(table, fields, dup, options) {
 
     // columns and values
     var strCols = getSqlPart(basic.keys(fields), SQL_PART_KEY, ',');
-    var strValues = getSqlPart(basic.values(fields), SQL_PART_KEY, ',');
+    var strValues = getSqlPart(basic.values(fields), SQL_PART_VALUE, ',');
     sqlPartList.push('(' + strCols + ') VALUES (' + strValues + ')');
 
     // dup

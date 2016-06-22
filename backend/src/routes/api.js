@@ -11,7 +11,7 @@ var router = express.Router();
 var handler = require(ROOT_PATH + '/handler');
 
 router.get('/:comp/:iface', handler.entrance);
-router.get('/:comp/:iface', handler.entrance);
+router.post('/:comp/:iface', handler.entrance);
 //router.get('/page/:*', pageHandler.entrance)
 //router.post('/page/*', pageHandler.entrance)
 //router.get('/header/*', headerHandler.entrance)

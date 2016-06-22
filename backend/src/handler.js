@@ -7,7 +7,8 @@ var ROOT_PATH = path.resolve(__dirname);
 
 exports.entrance = function(req, res, next) {
     console.log(req.params.comp + " " + req.params.iface);
-    var comp = require(path.resolve(ROOT_PATH, "handlers", req.params.comp));
+    var compPath = path.resolve(ROOT_PATH, 'handlers', req.params.comp)
+    var comp = require(compPath);
     comp.entrance(req, res, next);
 };
 
