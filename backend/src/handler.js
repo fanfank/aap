@@ -12,9 +12,6 @@ exports.entrance = function(req, res, next) {
     comp.entrance(req, res, next);
 };
 
-//var pageHandler   = require(ROOT_PATH + '/handlers/page');
-//var headerHandler = require(ROOT_PATH + '/handlers/header');
-//var lefterHandler = require(ROOT_PATH + '/handlers/lefter');
-//var itemHandler   = require(ROOT_PATH + '/handlers/item');
-//var formHandler   = require(ROOT_PATH + '/handlers/form');
-//var formInputHandler = require(ROOT_PATH + '/handlers/form-input');
+exports.bootstrap = function(req, res, next) {
+    res.sendFile(ROOT_PATH + '/static/bootstrap/dbwrite.html');
+};

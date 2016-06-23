@@ -10,7 +10,7 @@ var router = express.Router();
 
 var handler = require(ROOT_PATH + '/handler');
 
-router.get('/:comp/:iface', handler.entrance);
-router.post('/:comp/:iface', handler.entrance);
+router.get('/', handler.bootstrap);
+router.post('/set', handler.bootstrap);
 
 module.exports = router;

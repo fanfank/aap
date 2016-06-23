@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>      
+    <head>
+        <title>AAP - Bootstrap</title>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8">                  
+        <link rel="shortcut icon" href="/statics/images/icons/favicon.png" type="image/png"/>
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function(event) {
+                var msg = window.location.hash;
+                if (msg.length > 0) {
+                    document.getElementById('error-message').innerHTML = 
+                        '<span style="color: red;">'
+                        + msg.substr(1)
+                        + '</span>';
+                }
+            });
+        </script>
+    </head>
+    <body style="background: #f1f1f1;">
+        <div style="text-align: center;" id="content">
+            <h1>AAP</h1>
+            <p>请填写用于写数据的数据库的配置</p>
+            <form method="post" action="/bootstrap/data/dbwrite">
+                <p>
+                    <label>
+                        <span>数据库名：</span>
+                        <input type="text" name="aapdb_name">
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <span>Host：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <input type="text" name="aapdb_write_host">
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <span>Port：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <input type="text" name="aapdb_write_port">
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <span>用户名：&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <input type="text" name="aapdb_write_user">
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <span>用户密码：</span>
+                        <input type="password" name="aapdb_write_password">
+                    </label>
+                </p>
+                <p>
+                    <input type="submit" name="aap-submit" value="确定">
+                    <!--<input type="hidden" name="redirect_to" value="/bootstrap/dbread">-->
+                    <input type="hidden" name="testcookie" value="确定">
+                </p>
+                <p id='error-message'>
+                </p>
+            </form>
+        </div>
+    </body>     
+</html>
