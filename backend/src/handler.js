@@ -13,5 +13,5 @@ exports.entrance = function(req, res, next) {
 };
 
 exports.bootstrap = function(req, res, next) {
-    res.sendFile(ROOT_PATH + '/static/bootstrap/dbwrite.html');
+    // 检查是否已经存在配置文件
 };

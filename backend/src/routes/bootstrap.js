@@ -11,6 +11,7 @@ var router = express.Router();
 var handler = require(ROOT_PATH + '/handler');
 
 router.get('/', handler.bootstrap);
-router.post('/set', handler.bootstrap);
+router.get('/:pageType', handler.bootstrap);
+router.post('/', handler.bootstrap);
 
 module.exports = router;
