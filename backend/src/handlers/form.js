@@ -43,12 +43,12 @@ exports.entrance = function(req, res, next) {
 };
 
 function addForm(req, res) {
-    name = req.query.name || '';
-    post_api = req.query.post_api || '';
-    content_type = req.query.content_type || 'application/x-www-form-urlencoded;charset=utf-8';
-    components = req.query.components || '';
-    op_user = req.query.op_user || '';
-    ext = req.query.ext || '';
+    name = req.body.name || '';
+    post_api = req.body.post_api || '';
+    content_type = req.body.content_type || 'application/x-www-form-urlencoded;charset=utf-8';
+    components = req.body.components || '';
+    op_user = req.body.op_user || '';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(post_api) || lz(components)) {
         jr(res, {
@@ -78,13 +78,13 @@ function addForm(req, res) {
 };
 
 function modifyForm(req, res) {
-    id = req.query.id || id;
-    name = req.query.name || '';
-    post_api = req.query.post_api || '';
-    content_type = req.query.content_type || 'application/x-www-form-urlencoded;charset=utf-8';
-    components = req.query.components || '';
-    op_user = req.query.op_user || '';
-    ext = req.query.ext || '';
+    id = req.body.id || id;
+    name = req.body.name || '';
+    post_api = req.body.post_api || '';
+    content_type = req.body.content_type || 'application/x-www-form-urlencoded;charset=utf-8';
+    components = req.body.components || '';
+    op_user = req.body.op_user || '';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(post_api) || lz(components) || id <= 0) {
         jr(res, {
@@ -116,7 +116,7 @@ function modifyForm(req, res) {
 };
 
 function deleteForm(req, res) {
-    id = req.query.id || 0;
+    id = req.body.id || 0;
 
     if (id <= 0) {
         jr(res, {

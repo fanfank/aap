@@ -43,13 +43,13 @@ exports.entrance = function(req, res, next) {
 };
 
 function addItem(req, res) {
-    name = req.query.name || '';
-    item_type = req.query.item_type || '';
-    display = req.query.display || '';
-    icon = req.query.icon || '';
-    detail = req.query.detail || '';
-    op_user = req.query.op_user || '';
-    ext = req.query.ext || '';
+    name = req.body.name || '';
+    item_type = req.body.item_type || '';
+    display = req.body.display || '';
+    icon = req.body.icon || '';
+    detail = req.body.detail || '';
+    op_user = req.body.op_user || '';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(item_type) || lz(detail) || lz(display)) {
         jr(res, {
@@ -81,14 +81,14 @@ function addItem(req, res) {
 };
 
 function modifyItem(req, res) {
-    id = req.query.id || 0;
-    name = req.query.name || '';
-    item_type = req.query.item_type || '';
-    display = req.query.display || '';
-    icon = req.query.icon || '';
-    detail = req.query.detail || '';
-    op_user = req.query.op_user || '';
-    ext = req.query.ext || '';
+    id = req.body.id || 0;
+    name = req.body.name || '';
+    item_type = req.body.item_type || '';
+    display = req.body.display || '';
+    icon = req.body.icon || '';
+    detail = req.body.detail || '';
+    op_user = req.body.op_user || '';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(item_type) || lz(detail) || lz(display) || id <= 0) {
         jr(res, {
@@ -122,7 +122,7 @@ function modifyItem(req, res) {
 };
 
 function deleteItem(req, res) {
-    id = req.query.id || 0;
+    id = req.body.id || 0;
 
     if (id <= 0) {
         jr(res, {

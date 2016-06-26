@@ -20,7 +20,7 @@
         <div style="text-align: center;" id="content">
             <h1>AAP</h1>
             <p>请填写用于写数据的数据库的配置</p>
-            <form method="post" action="/bootstrap/data/dbwrite">
+            <form method="post" action="/bootstrap/dbwrite">
                 <p>
                     <label>
                         <span>数据库名：</span>
@@ -53,7 +53,7 @@
                 </p>
                 <p>
                     <input type="submit" name="aap-submit" value="确定">
-                    <!--<input type="hidden" name="redirect_to" value="/bootstrap/dbread">-->
+                    <input type="hidden" name="redirect_to" value="/bootstrap/dbread.html">
                     <input type="hidden" name="testcookie" value="确定">
                 </p>
                 <p id='error-message'>

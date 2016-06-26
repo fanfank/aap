@@ -43,15 +43,15 @@ exports.entrance = function(req, res, next) {
 };
 
 function addFormInput(req, res) {
-    name = req.query.name || '';
-    display = req.query.display || '';
-    pname = req.query.pname || '';
-    help_message = req.query.help_message || '';
-    assignedAttrs = req.query.assignedAttrs || '';
-    form_input_type = req.query.form_input_type || '';
-    detail = req.query.detail || '';
-    op_user = req.query.op_user || '';
-    ext = req.query.ext || '';
+    name = req.body.name || '';
+    display = req.body.display || '';
+    pname = req.body.pname || '';
+    help_message = req.body.help_message || '';
+    assignedAttrs = req.body.assignedAttrs || '';
+    form_input_type = req.body.form_input_type || '';
+    detail = req.body.detail || '';
+    op_user = req.body.op_user || '';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(form_input_type)) {
         jr(res, {
@@ -83,16 +83,16 @@ function addFormInput(req, res) {
 };
 
 function modifyFormInput(req, res) {
-    id = req.query.id || 0;
-    name = req.query.name || '';
-    display = req.query.display || '';
-    pname = req.query.pname || '';
-    help_message = req.query.help_message || '';
-    assignedAttrs = req.query.assignedAttrs || '';
-    form_input_type = req.query.form_input_type || '';
-    detail = req.query.detail || '';
-    op_user = req.query.op_user || '';
-    ext = req.query.ext || '';
+    id = req.body.id || 0;
+    name = req.body.name || '';
+    display = req.body.display || '';
+    pname = req.body.pname || '';
+    help_message = req.body.help_message || '';
+    assignedAttrs = req.body.assignedAttrs || '';
+    form_input_type = req.body.form_input_type || '';
+    detail = req.body.detail || '';
+    op_user = req.body.op_user || '';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(form_input_type) || id <= 0) {
         jr(res, {
@@ -126,7 +126,7 @@ function modifyFormInput(req, res) {
 }
 
 function deleteFormInput(req, res) {
-    id = req.query.id || 0;
+    id = req.body.id || 0;
 
     if (id <= 0) {
         jr(res, {

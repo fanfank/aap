@@ -11,7 +11,7 @@ var buildFieldDict = basic.buildFieldDict;
 var sqlBuilder = require(ROOT_PATH + '/libs/sql');
 
 var db = require(ROOT_PATH + '/db');
-var readPool = db.readPool;
+var getReadPool() = db.getReadPool();
 var writePool = db.writePool;
 
 var FORM_INPUT_FIELDS = [
@@ -97,7 +97,7 @@ exports.getFormInputList = function(r, cb) {
 
     // 先查出记录总数
     var sql = 'SELECT COUNT(*) AS total FROM ' + FORM_INPUT_TABLE;
-    readPool.query(sql, function(err, rows, fields) {
+    getReadPool().query(sql, function(err, rows, fields) {
         if (!err) {
             total = rows[0].total;
 
@@ -115,7 +115,7 @@ exports.getFormInputList = function(r, cb) {
                     + r.rn + ' OFFSET ' + (r.rn * (r.pn - 1))
             );
 
-            readPool.query(sql, function(err, rows, fields) {
+            getReadPool().query(sql, function(err, rows, fields) {
                 if (err) {
                     cb({ 
                         errno: -1, 
@@ -172,7 +172,7 @@ exports.getFormInput = function(r, cb) {
         }
     );
 
-    readPool.query(sql, function(err, rows, fields) {
+    getReadPool().query(sql, function(err, rows, fields) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {
             cb({
                 errno: -1,

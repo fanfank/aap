@@ -11,7 +11,7 @@ var buildFieldDict = basic.buildFieldDict;
 var sqlBuilder = require(ROOT_PATH + '/libs/sql');
 
 var db = require(ROOT_PATH + '/db');
-var readPool = db.readPool;
+var getReadPool() = db.getReadPool();
 var writePool = db.writePool;
 
 var PAGE_FIELDS = [
@@ -95,7 +95,7 @@ exports.getPageList = function(r, cb) {
 
     // 先查出记录总数
     var sql = 'SELECT COUNT(*) AS total FROM ' + PAGE_TABLE;
-    readPool.query(sql, function(err, rows, fields) {
+    getReadPool().query(sql, function(err, rows, fields) {
         if (!err) {
             total = rows[0].total;
 
@@ -114,7 +114,7 @@ exports.getPageList = function(r, cb) {
             );
             console.log(sql);
 
-            readPool.query(sql, function(err, rows, fields) {
+            getReadPool().query(sql, function(err, rows, fields) {
                 if (err) {
                     cb({ 
                         errno: -1, 
@@ -170,7 +170,7 @@ exports.getPage = function(r, cb) {
             'id=': r.id
         }
     );
-    readPool.query(sql, function(err, rows, fields) {
+    getReadPool().query(sql, function(err, rows, fields) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {
             cb({
                 errno: -1,

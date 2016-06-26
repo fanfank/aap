@@ -12,6 +12,7 @@
                         '<span style="color: red;">'
                         + msg.substr(1)
                         + '</span>';
+                }
             });
         </script>
     </head>
@@ -19,7 +20,7 @@
         <div style="text-align: center;" id="content">
             <h1>AAP</h1>
             <p>请填写用于读数据的数据库的配置（不填写则默认使用写数据的数据库配置）</p>
-            <form method="post" action="/bootstrap/data/dbread">
+            <form method="post" action="/bootstrap/dbread">
                 <p>
                     <label>
                         <span>Host：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -46,7 +47,7 @@
                 </p>
                 <p>
                     <input type="submit" name="aap-submit" value="确定">
-                    <input type="hidden" name="redirect_to" value="/bootstrap/dbread">
+                    <input type="hidden" name="redirect_to" value="/bootstrap/finish.html">
                     <input type="hidden" name="testcookie" value="确定">
                 </p>
                 <p id='error-message'>

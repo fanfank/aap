@@ -36,7 +36,7 @@ function escapeString(val, forbidQualified) {
     var sql = '';
 
     for (var i = 0; i < val.length; i++) {
-      sql += (i === 0 ? '' : ', ') + SqlString.escapeId(val[i], forbidQualified);
+      sql += (i === 0 ? '' : ', ') + escapeString(val[i], forbidQualified);
     }
 
     return sql;

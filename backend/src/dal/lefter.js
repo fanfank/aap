@@ -11,7 +11,7 @@ var buildFieldDict = basic.buildFieldDict;
 var sqlBuilder = require(ROOT_PATH + '/libs/sql');
 
 var db = require(ROOT_PATH + '/db');
-var readPool = db.readPool;
+var getReadPool() = db.getReadPool();
 var writePool = db.writePool;
 
 var LEFTER_FIELDS = [
@@ -94,7 +94,7 @@ exports.getLefterList = function(r, cb) {
 
     // 先查出记录总数
     var sql = 'SELECT COUNT(*) AS total FROM ' + LEFTER_TABLE;
-    readPool.query(sql, function(err, rows, fields) {
+    getReadPool().query(sql, function(err, rows, fields) {
         if (!err) {
             total = rows[0].total;
 
@@ -113,7 +113,7 @@ exports.getLefterList = function(r, cb) {
             );
             console.log(sql);
 
-            readPool.query(sql, function(err, rows, fields) {
+            getReadPool().query(sql, function(err, rows, fields) {
                 if (err) {
                     cb({ 
                         errno: -1, 
@@ -169,7 +169,7 @@ exports.getLefter = function(r, cb) {
             'id=': r.id
         }
     );
-    readPool.query(sql, function(err, rows, fields) {
+    getReadPool().query(sql, function(err, rows, fields) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {
             cb({
                 errno: -1,

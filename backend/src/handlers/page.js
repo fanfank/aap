@@ -43,14 +43,14 @@ exports.entrance = function(req, res, next) {
 };
 
 function addPage(req, res) {
-    title = req.query.title || '';
-    name = req.query.name || '';
-    urlmark = req.query.urlmark || '';
-    components = req.query.components || '{}';
-    content = req.query.content || '{}';
-    type = req.query.type || 0;
-    op_user = req.query.op_user || 'guest';
-    ext = req.query.ext || '';
+    title = req.body.title || '';
+    name = req.body.name || '';
+    urlmark = req.body.urlmark || '';
+    components = req.body.components || '{}';
+    content = req.body.content || '{}';
+    type = req.body.type || 0;
+    op_user = req.body.op_user || 'guest';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(components) || lz(content)) {
         jr(res, {
@@ -83,15 +83,15 @@ function addPage(req, res) {
 };
 
 function modifyPage(req, res) {
-    id = req.query.id || 0;
-    title = req.query.title || '';
-    name = req.query.name || '';
-    urlmark = req.query.urlmark || '';
-    components = req.query.components || '{}';
-    content = req.query.content || '{}';
-    type = req.query.type || 0;
-    op_user = req.query.op_user || 'guest';
-    ext = req.query.ext || '';
+    id = req.body.id || 0;
+    title = req.body.title || '';
+    name = req.body.name || '';
+    urlmark = req.body.urlmark || '';
+    components = req.body.components || '{}';
+    content = req.body.content || '{}';
+    type = req.body.type || 0;
+    op_user = req.body.op_user || 'guest';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(components) || lz(content) || id <= 0) {
         jr(res, {
@@ -126,7 +126,7 @@ function modifyPage(req, res) {
 };
 
 function deletePage(req, res) {
-    id = req.query.id || 0;
+    id = req.body.id || 0;
 
     if (id <= 0) {
         jr({

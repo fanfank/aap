@@ -13,5 +13,27 @@ exports.entrance = function(req, res, next) {
 };
 
 exports.bootstrap = function(req, res, next) {
-    // 检查是否已经存在配置文件
+    if (req.method == 'POST') {
+        if (req.path.indexOf('dbwrite') != -1) {
+            var hdlr = require(ROOT_PATH + '/initialization/dbwrite').initWriteDb;
+            hdlr(req, res);
+            
+        } else if (req.path.indexOf('dbread') != -1) {
+            var hdlr = require(ROOT_PATH + '/initialization/dbread').initReadDb;
+            hdlr(req, res);
+
+        } else {
+            res.status(404).send('Unknown interface');
+        }
+        return;
+
+    } else {
+        var urlpath = req.path;
+
+        if (urlpath.indexOf('..') != -1) {
+            res.status(404).send('".." in path is forbidden');
+            return;
+        }
+        res.sendFile(ROOT_PATH + '/' + urlpath);
+    }
 };

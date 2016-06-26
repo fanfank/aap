@@ -9,7 +9,13 @@ var express = require('express');
 var apiRoutes = require(ROOT_PATH + '/routes/api');
 var bootstrapRoutes = require(ROOT_PATH + '/routes/bootstrap');
 
+var bodyParser = require('body-parser');
+
 var app = express();
+app.use( bodyParser.json() );   // support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ // support URL-encoded bodies
+  extended: true
+})); 
 
 app.use('/api', apiRoutes);
 app.use('/bootstrap', bootstrapRoutes);

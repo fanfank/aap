@@ -43,10 +43,10 @@ exports.entrance = function(req, res, next) {
 };
 
 function addHeader(req, res) {
-    name = req.query.name || '';
-    components = req.query.components || '{}';
-    op_user = req.query.op_user || 'guest';
-    ext = req.query.ext || '';
+    name = req.body.name || '';
+    components = req.body.components || '{}';
+    op_user = req.body.op_user || 'guest';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(components)) {
         jr(res, {
@@ -73,11 +73,11 @@ function addHeader(req, res) {
 };
 
 function modifyHeader(req, res) {
-    id = req.query.id || 0;
-    name = req.query.name || '';
-    components = req.query.components || '{}';
-    op_user = req.query.op_user || 'guest';
-    ext = req.query.ext || '';
+    id = req.body.id || 0;
+    name = req.body.name || '';
+    components = req.body.components || '{}';
+    op_user = req.body.op_user || 'guest';
+    ext = req.body.ext || '';
 
     if (lz(name) || lz(components) || id <= 0) {
         jr(res, {
@@ -106,7 +106,7 @@ function modifyHeader(req, res) {
 }
 
 function deleteHeader(req, res) {
-    id = req.query.id || 0;
+    id = req.body.id || 0;
 
     if (id <= 0) {
         jr(res, {
