@@ -7,6 +7,8 @@ var fs = require('fs');
 var path = require('path');
 var ROOT_PATH = path.resolve(__dirname, '..');
 
+var basic = require(ROOT_PATH + '/libs/basic');
+
 function initWriteDb(req, res) {
     var dbConf = {
         db_type: 'mysql',
@@ -32,7 +34,7 @@ function initWriteDb(req, res) {
     try {
         dropTable = function(tableName) {
             connection.query(
-                'DROP TABLE ' + tableName,
+                'DROP TABLE IF EXISTS ' + tableName,
                 function(err) {
                     console.log(err);
                 }
@@ -41,7 +43,7 @@ function initWriteDb(req, res) {
         connection.connect();
 
         // 获取初始化query
-        var initQuery = JSON.parse(fs.readFileSync(ROOT_PATH + '/../../../sqls/init_query.json'));
+        var initQuery = JSON.parse(fs.readFileSync(ROOT_PATH + '/../../sqls/init_query.json'));
 
         // index 0 ~ 5 corresponds to aap_page to aap_form_input 
         // value < 0: running

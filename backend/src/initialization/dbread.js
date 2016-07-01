@@ -7,6 +7,8 @@ var fs = require('fs');
 var path = require('path');
 var ROOT_PATH = path.resolve(__dirname, '..');
 
+var basic = require(ROOT_PATH + '/libs/basic');
+
 function initReadDb(req, res) {
     var dbConf = {};
     try {
@@ -31,7 +33,7 @@ function initReadDb(req, res) {
 
     // 检查新的配置是否能读取DB
     var mysql = require('mysql');
-    var connection = mysql.createConnection({
+    var connectionConf = {
         host: dbConf.detail.aapdb_read_host
             || dbConf.detail.aapdb_write_host,
         port: dbConf.detail.aapdb_read_port
@@ -41,7 +43,8 @@ function initReadDb(req, res) {
         password: dbConf.detail.aapdb_read_password
             || dbConf.detail.aapdb_write_password,
         database: dbConf.detail.aapdb_name
-    });
+    };
+    var connection = mysql.createConnection(connectionConf);
 
     // index 0 ~ 5 corresponds to aap_page to aap_form_input 
     // value < 0: running
@@ -61,7 +64,7 @@ function initReadDb(req, res) {
     //FIXME fix this ugly code
     tableList.forEach(function(tableName, index) {
         connection.query(
-            'SELECT COUNT(*) AS total FROM ' + tableName;
+            'SELECT COUNT(*) AS total FROM ' + tableName,
             function (errSel) {
                 if (errSel) {
                     console.log(errSel);
@@ -120,6 +123,7 @@ function initReadDb(req, res) {
         timeElapsed += 0.5;
         setTimeout(checkFunction, 500);
     };
+    checkFunction();
 }
 
 exports.initReadDb = initReadDb;
