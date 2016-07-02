@@ -5,12 +5,11 @@
 var path = require("path");
 var ROOT_PATH = path.resolve(__dirname);
 
+var bodyParser = require('body-parser');
 var express = require('express');
+
 var apiRoutes = require(ROOT_PATH + '/routes/api');
 var bootstrapRoutes = require(ROOT_PATH + '/routes/bootstrap');
-
-var bodyParser = require('body-parser');
-
 var db = require(ROOT_PATH + '/db.js');
 
 var app = express();
@@ -21,7 +20,8 @@ app.use(bodyParser.urlencoded({ // support URL-encoded bodies
 
 app.use('/api', apiRoutes);
 app.use('/bootstrap', bootstrapRoutes);
-app.use(express.static(ROOT_PATH + '/static'));
+app.use('/statics', express.static(ROOT_PATH + '/static'));
+app.use('/', function(req, res, next) { res.sendFile(ROOT_PATH + '/static/index.html'); });
 
 app.listen(3093, function() {
     console.log('AAP backend listening on port 3093');

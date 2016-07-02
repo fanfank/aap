@@ -5,7 +5,7 @@
   "main": "index.jsx",
   "scripts": {
     "dev": "webpack-dev-server --config frontend/webpack.frontend.dev.config.js --hot --inline --progress --colors",
-    "build": "echo 'not implemented'"
+    "build": "webpack --progress --profile --colors --config frontend/webpack.frontend.config.js && cp frontend/dist/* backend/src/static/"
   },
   "repository": {
     "type": "git",
