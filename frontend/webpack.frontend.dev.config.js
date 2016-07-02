@@ -1,9 +1,9 @@
 /**
- * @author  xuruiqi
+ * @author  reetsee.com
  * @date    20160616
  */
-var HtmlwebpackPlugin = require("html-webpack-plugin")
 var path = require("path");
+var HtmlwebpackPlugin = require("html-webpack-plugin")
 var webpack = require("webpack");
 
 var ROOT_PATH = path.resolve(__dirname);

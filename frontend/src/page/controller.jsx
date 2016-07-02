@@ -37,8 +37,8 @@ class PageCtl {
                     }
 
                     data['data']['page_list'].forEach((page) => {
-                        let pageId = parseInt(page['id']);
-                        thisCtl.pageDict[pageId] = new Promise((rs, rj) => {
+                        let urlmark = page['urlmark'];
+                        thisCtl.pageDict[urlmark] = new Promise((rs, rj) => {
                             rs(page);
                         });
                     });
@@ -72,6 +72,12 @@ class PageCtl {
                             reject('Get page data failed');
                             return;
                         }
+
+                        let urlmark = data['data']['urlmark'];
+                        thisCtl.pageDict[urlmark] = new Promise((rs, rj) => {
+                            rs(data['data']);
+                        });
+
                         resolve(data['data']);
                     },
                     error: function() {
@@ -89,6 +95,44 @@ class PageCtl {
         }
 
         return thisCtl.pageDict[pageId];
+    }
+
+    getPage(urlmark, forceUpdate) {
+        let thisCtl = this;
+
+        if (thisCtl.pageDict[urlmark] == undefined || forceUpdate) {
+            thisCtl.pageDict[urlmark] = new Promise((resolve, reject) => {
+                $.ajax({
+                    type: 'GET',
+                    url: PAGE_API.URL_GET_PAGE,
+                    data: {
+                        ie: 'utf-8',
+                        urlmark: urlmark,
+                    },
+                    success: function(data, status) {
+                        if (basic.statusOk(status) !== ''
+                                || basic.errnoOk(data) !== '') {
+                            reject('Get page data failed');
+                            return;
+                        }
+
+                        resolve(data['data']);
+                    },
+                    error: function() {
+                        reject('Get page data failed');
+                    }
+                });
+            });
+            thisCtl.pageDict[urlmark].catch((reason) => {
+                console.log(reason);
+                setTimeout(
+                    () => { thisCtl.getPage(urlmark, true); },
+                    5000
+                );
+            });
+        }
+
+        return thisCtl.pageDict[urlmark];
     }
 };
 export let pageCtl = new PageCtl();

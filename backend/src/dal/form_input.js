@@ -11,8 +11,8 @@ var buildFieldDict = basic.buildFieldDict;
 var sqlBuilder = require(ROOT_PATH + '/libs/sql');
 
 var db = require(ROOT_PATH + '/db');
-var getReadPool() = db.getReadPool();
-var writePool = db.writePool;
+var getReadPool = db.getReadPool;
+var getWritePool = db.getWritePool;
 
 var FORM_INPUT_FIELDS = [
     'id', 'name', 'display', 'pname', 'help_message', 'assignedAttrs',
@@ -34,7 +34,7 @@ exports.addFormInput = function(r, cb) {
         )
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -62,7 +62,7 @@ exports.modifyFormInput = function(r, cb) {
         }
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -81,7 +81,7 @@ exports.deleteFormInput = function(r, cb) {
         } 
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;

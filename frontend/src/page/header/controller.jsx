@@ -53,7 +53,7 @@ class HeaderCtl {
             });
         }
 
-        return thisCtl.headerCtl[headerId];
+        return thisCtl.headerDict[headerId];
     }
 };
 export let headerCtl = new HeaderCtl();

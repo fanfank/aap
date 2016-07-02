@@ -176,7 +176,7 @@ function getLefterList(req, res) {
 }
 
 function getLefterSuggestList(req, res) {
-    user = req.query.user || '';
+    user = req.query.user;
     rq = {
         pn: 1,
         rn: 200,
@@ -192,7 +192,7 @@ function getLefterSuggestList(req, res) {
         suggestList = [];
         rsp['data']['lefter_list'].forEach(function(lefter) {
             suggestList.push({
-                display: lefter['lefter_name'],
+                display: lefter['name'],
                 value: lefter['id'],
             });
         });

@@ -63,8 +63,8 @@ export let DefaultPageContent = React.createClass({
 
                 const pagination = this.state.pagination;
                 pagination.total = pageInfo['total'];
-                pagination.current = pageInfo['pn'] || pn;
-                pagination.pageSize = pageInfo['rn'] || rn;
+                pagination.current = parseInt(pageInfo['pn']) || pn;
+                pagination.pageSize = parseInt(pageInfo['rn']) || rn;
                 pagination.showSizeChanger = true;
 
                 this.setState({
@@ -107,8 +107,8 @@ export let DefaultPageContent = React.createClass({
         let renderFunction = function(text, record) {
             let spanList = [];
             operationList.forEach((operation) => {
-                let formId = operation['form'];
-                let pageId = this.props.pageData['id'];
+                let formUrlmark = operation["form"];
+                let pageUrlmark = this.props.pageData["urlmark"];
                 let display = '';
 
                 // 加一个竖线分割
@@ -130,7 +130,7 @@ export let DefaultPageContent = React.createClass({
                     else {display = '复制';}
 
                     // 加链接
-                    let jumpPath = `/page/${pageId}/form/${formId}`;
+                    let jumpPath = `/page/${pageUrlmark}/form/${formUrlmark}`;
                     let query = {
                         type: operation['type'],
                         api: operation['api'],

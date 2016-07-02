@@ -88,3 +88,5 @@ export function encode(jobj) {
 export function isVoid(t) {
     return t === undefined || t === null;
 }
+
+export let hostPortPrefix = '';

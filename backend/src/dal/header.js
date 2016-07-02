@@ -11,8 +11,8 @@ var buildFieldDict = basic.buildFieldDict;
 var sqlBuilder = require(ROOT_PATH + '/libs/sql');
 
 var db = require(ROOT_PATH + '/db');
-var getReadPool() = db.getReadPool();
-var writePool = db.writePool;
+var getReadPool = db.getReadPool;
+var getWritePool = db.getWritePool;
 
 var HEADER_FIELDS = [
     'id', 'name', 'components', 'op_user', 
@@ -33,7 +33,7 @@ exports.addHeader = function(r, cb) {
         )
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -60,7 +60,7 @@ exports.modifyHeader = function(r, cb) {
         }
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -79,7 +79,7 @@ exports.deleteHeader = function(r, cb) {
         } 
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;

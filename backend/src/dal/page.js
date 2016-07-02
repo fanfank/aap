@@ -11,8 +11,8 @@ var buildFieldDict = basic.buildFieldDict;
 var sqlBuilder = require(ROOT_PATH + '/libs/sql');
 
 var db = require(ROOT_PATH + '/db');
-var getReadPool() = db.getReadPool();
-var writePool = db.writePool;
+var getReadPool = db.getReadPool;
+var getWritePool = db.getWritePool;
 
 var PAGE_FIELDS = [
     'id', 'name', 'title', 'components', 'content', 'urlmark',
@@ -33,7 +33,7 @@ exports.addPage = function(r, cb) {
         )
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -60,7 +60,7 @@ exports.modifyPage = function(r, cb) {
         }
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -79,7 +79,7 @@ exports.deletePage = function(r, cb) {
         } 
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -166,15 +166,14 @@ exports.getPage = function(r, cb) {
     var sql = sqlBuilder.getSqlSelect(
         PAGE_TABLE,
         PAGE_FIELDS,
-        {
-            'id=': r.id
-        }
+        r.id ? { 'id=': r.id } : { 'urlmark=': r.urlmark }
     );
+
     getReadPool().query(sql, function(err, rows, fields) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {
             cb({
                 errno: -1,
-                errmsg: 'Page ' + r.id + ' not exists',
+                errmsg: 'Page ' + (r.id || r.urlmark) + ' not exists',
                 data: err,
             });
             return;

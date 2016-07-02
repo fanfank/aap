@@ -27,9 +27,9 @@ export let Page = React.createClass({
 
     getData: function(props) {
         props = props || this.props;
-        let pageId = props.params.page;
+        let urlmark = props.params.page;
         let thisPage = this;
-        pageCtl.getPageById(pageId).then(
+        pageCtl.getPage(urlmark).then(
             (pageData) => { // 成功
                 // 获取Page Content
                 let contentProviderClass = undefined;

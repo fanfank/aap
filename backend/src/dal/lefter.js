@@ -11,8 +11,8 @@ var buildFieldDict = basic.buildFieldDict;
 var sqlBuilder = require(ROOT_PATH + '/libs/sql');
 
 var db = require(ROOT_PATH + '/db');
-var getReadPool() = db.getReadPool();
-var writePool = db.writePool;
+var getReadPool = db.getReadPool;
+var getWritePool = db.getWritePool;
 
 var LEFTER_FIELDS = [
     'id', 'name', 'components', 'op_user', 
@@ -32,7 +32,7 @@ exports.addLefter = function(r, cb) {
             ]
         )
     );
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -59,7 +59,7 @@ exports.modifyLefter = function(r, cb) {
         }
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -78,7 +78,7 @@ exports.deleteLefter = function(r, cb) {
         } 
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;

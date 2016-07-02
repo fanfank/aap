@@ -54,7 +54,7 @@ class LefterCtl {
             });
         }
 
-        return thisCtl.lefterCtl[lefterId];
+        return thisCtl.lefterDict[lefterId];
     }
 };
 export let lefterCtl = new LefterCtl();

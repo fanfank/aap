@@ -66,7 +66,7 @@ var CommonInputMixin = {
 export let FormInput = React.createClass({
     getInitialState: function() {
         return {
-            formInputData: undefined,
+            'formInputData': undefined,
         };
     },
 
@@ -105,7 +105,7 @@ export let FormInput = React.createClass({
                 </div>
             );
         } else {
-            switch(data['type']) {
+            switch(data['form_input_type']) {
             case 'string':
                 return (
                     <StringFormInput 
@@ -174,7 +174,7 @@ export let FormInput = React.createClass({
             //case 'checkbox':
             //    return (<CheckboxFormInput formInputData={this.state.formInputData} />);
             default: 
-                alert('Unknown item: ' + JSON.stringify(data));
+                alert('Unknown form input: ' + JSON.stringify(data));
                 return null;
             }
         }
@@ -196,7 +196,7 @@ let StringFormInput = React.createClass({
         );
 
         return (
-            <Form.Item>
+            <Form.Item
                 labelCol={{span: 4}}
                 wrapperCol={{span: 16, offset: 1}}
                 extra={this.getExtraMessage()}
@@ -396,6 +396,7 @@ let RelationFormInput = React.createClass({
     render: function() {
         const { remoteData, formInputData: data } = this.props;
         const { relationList, selectedValue } = this.state;
+        const detailContent = basic.decode(data['detail']);
         const inputProps = this.props.form.getFieldProps(
             data['pname'],
             {
@@ -447,7 +448,7 @@ let RelationFormInput = React.createClass({
                 </Select>
             </Form.Item>
 
-            {relatedItemList}
+            {relatedInputList}
 
             </div>
         );
@@ -586,7 +587,7 @@ let MutablelistFormInput = React.createClass({
                         subInputValue={subInput["value"]}
                         prefix={`__dummy_${data["pname"]}_${subInput["id"]}_`}
                         changeCallback={thisInput.update}
-                        formSubItem={detailContent["sub_item"]} />
+                        formSubInput={detailContent["sub_input"]} />
                     </Col>
                     <Col span={6}>
                     <Button onClick={() => thisInput.remove(subInput["id"])}>删除</Button>
@@ -762,7 +763,7 @@ let MutabledictFormInput = React.createClass({
                         subInputValue={subInput['key']}
                         prefix={`__dummy_key_${data['pname']}_${subInput['id']}_`}
                         changeCallback={thisInput.updateKey}
-                        formSubInput={detailContent['key_sub_item']} />
+                        formSubInput={detailContent['key_sub_input']} />
 
                     <FormSubInput
                         params={this.props.params}
@@ -770,7 +771,7 @@ let MutabledictFormInput = React.createClass({
                         subInputValue={subInput['value']}
                         prefix={`__dummy_value_${data['pname']}_${subInput['id']}`}
                         changeCallback={thisInput.updateValue}
-                        formSubInput={detailContent['value_sub_item']} />
+                        formSubInput={detailContent['value_sub_input']} />
 
                     <Button onClick={() => thisInput.remove(subInput['id'])}>删除</Button>
                 </Form.Item>
@@ -864,7 +865,7 @@ let JsonFormInput = React.createClass({
 
         let remoteDataValue = this.getRemoteDataValue();
 
-        // 根据structure构建sub item
+        // 根据structure构建sub input
         let inputList = basic.keys(detailContent['structure']).map((key) => {
             let value = detailContent['structure'][key];
             return (

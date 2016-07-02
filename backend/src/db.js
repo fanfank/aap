@@ -2,6 +2,8 @@
  * @author  reetsee.com
  * @date    20160623
  */
+var path = require('path');
+var ROOT_PATH = path.resolve(__dirname);
 
 var mysql = require('mysql');
 
@@ -11,9 +13,10 @@ var dbConf = {};
 var readPool = null;
 var writePool = null;
 
+console.log("Init db conf");
 var watcher = new file.Watcher();
 watcher.init(
-    '/conf/db.json',
+    ROOT_PATH + '/conf/db.json',
     function(content) {
         try {
             dbConf = JSON.parse(content);

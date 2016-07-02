@@ -22,7 +22,7 @@
     "url": "https://github.com/fanfank/aap/issues"
   },
   "devDependencies": {
-    "antd": "^1.4.1",
+    "antd": "^1.1.0",
     "babel-cli": "^6.9.0",
     "babel-core": "^6.8.0",
     "babel-loader": "^6.2.4",

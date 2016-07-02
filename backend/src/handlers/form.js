@@ -63,7 +63,7 @@ function addForm(req, res) {
         return;
     }
 
-    rq {
+    rq = {
         name: name,
         post_api: post_api,
         content_type: content_type,
@@ -100,7 +100,7 @@ function modifyForm(req, res) {
         return;
     }
 
-    rq {
+    rq = {
         id: id,
         name: name,
         post_api: post_api,
@@ -138,20 +138,23 @@ function deleteForm(req, res) {
 };
 
 function getForm(req, res) {
-    id = req.query.id || 0;
+    var id = req.query.id || undefined;
+    var urlmark = req.query.urlmark || undefined;
     
-    if (id <= 0) {
+    if (!id && !urlmark) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 id: id,
+                urlmark: urlmark,
             }
         });
     }
 
-    rq = {
-        id: id
+    var rq = {
+        id: id,
+        urlmark: urlmark,
     };
 
     formDal.getForm(rq, function(rsp) {
@@ -186,7 +189,7 @@ function getFormList(req, res) {
 }
 
 function getFormSuggestList(req, res) {
-    user = req.query.user || '';
+    user = req.query.user;
     rq = {
         pn: 1,
         rn: 200,
@@ -202,7 +205,7 @@ function getFormSuggestList(req, res) {
         suggestList = [];
         rsp['data']['form_list'].forEach(function(form) {
             suggestList.push({
-                display: form['form_name'],
+                display: form['name'],
                 value: form['id'],
             });
         });

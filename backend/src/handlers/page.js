@@ -48,7 +48,7 @@ function addPage(req, res) {
     urlmark = req.body.urlmark || '';
     components = req.body.components || '{}';
     content = req.body.content || '{}';
-    type = req.body.type || 0;
+    page_type = req.body.page_type || 1;
     op_user = req.body.op_user || 'guest';
     ext = req.body.ext || '';
 
@@ -71,7 +71,7 @@ function addPage(req, res) {
         "components": components,
         "content": content,
         "urlmark": urlmark,
-        "type": type,
+        "page_type": page_type,
         "op_user": op_user,
         "ext": ext,
     };
@@ -89,7 +89,7 @@ function modifyPage(req, res) {
     urlmark = req.body.urlmark || '';
     components = req.body.components || '{}';
     content = req.body.content || '{}';
-    type = req.body.type || 0;
+    page_type = req.body.page_type || 0;
     op_user = req.body.op_user || 'guest';
     ext = req.body.ext || '';
 
@@ -114,7 +114,7 @@ function modifyPage(req, res) {
         "components": components,
         "content": content,
         "urlmark": urlmark,
-        "type": type,
+        "page_type": page_type,
         "op_user": op_user,
         "ext": ext,
     }
@@ -150,21 +150,25 @@ function deletePage(req, res) {
 };
 
 function getPage(req, res) {
-    id = req.query.id || 0;
+    id = req.query.id || undefined;
+    urlmark = req.query.urlmark || undefined;
+
     
-    if (id <= 0) {
+    if (!id && !urlmark) {
         jr(res, {
             "errno": 0,
             "errmsg": "success",
             "data": {
                 "id": id,
+                "urlmark": urlmark,
             }
         });
         return;
     }
 
     var rq = {
-        "id": id,
+        id: id,
+        urlmark: urlmark,
     };
 
     pageDal.getPage(rq, function(rsp) {
@@ -199,7 +203,7 @@ function getPageList(req, res) {
 };
 
 function getPageSuggestList(req, res) {
-    user = req.query.user || '';
+    user = req.query.user;
     rq = {
         pn: 1,
         rn: 200,
@@ -215,7 +219,7 @@ function getPageSuggestList(req, res) {
         suggestList = [];
         rsp['data']['page_list'].forEach(function(page) {
             suggestList.push({
-                display: page['page_name'],
+                display: page['name'],
                 value: page['id'],
             });
         });

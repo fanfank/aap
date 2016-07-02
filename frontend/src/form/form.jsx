@@ -26,10 +26,10 @@ let FormComp = React.createClass({
     getData: function(props) {
         // 获取表单的各项配置数据
         props = props || this.props;
-        let formId = props.params.form;
-        formCtl.getFormById(formId).then(
+        let urlmark = props.params.form;
+        formCtl.getForm(urlmark).then(
             (formData) => { // 成功
-                if (!this._isMounted) {
+                if (this._isMounted) {
                     this.setState({
                         formData: formData
                     });
@@ -46,7 +46,7 @@ let FormComp = React.createClass({
             // 需要获取填充的内容
             formCtl.getRemoteData(query).then(
                 (remoteData) => {
-                    if (!this._isMounted) {
+                    if (this._isMounted) {
                         console.log(remoteData);
                         this.setState({
                             remoteData: remoteData,
@@ -219,7 +219,7 @@ let FormComp = React.createClass({
         );
         let query = this.props.location.query;
 
-        if (data == undefined || data['id'] != this.props.params.form) {
+        if (data == undefined || data['urlmark'] != this.props.params.form) {
             return (
                 <Modal visible={true}>
                 <Spin size="large" />
@@ -274,14 +274,14 @@ let FormComp = React.createClass({
 
                 <Spin spinning={posting} tip="提交中...">
                 <Form horizontal form={this.props.form} >
-                    {componentsContent['form_item'].map(
-                        (formItemId, index) => {
+                    {componentsContent['form_input'].map(
+                        (formInputId, index) => {
                             return (
-                                <FormItem 
+                                <FormInput
                                     key={index}
                                     params={this.props.params}
                                     form={this.props.form} 
-                                    formItem={formItemId} 
+                                    formInput={formInputId} 
                                     labelCol={{span: 6}}
                                     wrapperCol={{span: 14}}
                                     remoteData={basic.safeGet(

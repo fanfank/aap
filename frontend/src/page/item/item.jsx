@@ -66,7 +66,7 @@ export let Item = React.createClass({
                 </div>
             );
         } else {
-            switch(data['type']) {
+            switch(data['item_type']) {
             case 'page':
                 return (<PageItem params={this.props.params} itemData={data} />);
             case 'form':

@@ -44,8 +44,8 @@ class FormInputCtl {
                         id: formItemId,
                     },
                     success: function(data, status) {
-                        if (basic.statusOk(status) !== ""
-                                || basic.errnoOk(data) !== "") {
+                        if (basic.statusOk(status, false) !== ""
+                                || basic.errnoOk(data, false) !== "") {
                             reject("Get form item data failed");
                             return;
                         }
@@ -88,8 +88,8 @@ class FormInputCtl {
                     rn: rn,
                 },
                 success: function(data, status) {
-                    if (basic.statusOk(status) !== ''
-                            || basic.errnoOk(data) !== '') {
+                    if (basic.statusOk(status, false) !== ''
+                            || basic.errnoOk(data, false) !== '') {
                         reject("Get form input list failed");
                         return;
                     }
@@ -138,7 +138,7 @@ class FormInputCtl {
 
         $.ajax({
             type: 'GET',
-            url: basic.hostPortPrefix + detailContent['api'],
+            url: detailContent['api'],
             data: {
                 ie: 'utf-8',
             },

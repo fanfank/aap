@@ -192,7 +192,7 @@ function getItemList(req, res) {
 };
 
 function getItemSuggestList(req, res) {
-    user = req.query.user || '';
+    user = req.query.user;
     rq = {
         pn: 1,
         rn: 200,
@@ -208,7 +208,7 @@ function getItemSuggestList(req, res) {
         suggestList = [];
         rsp['data']['item_list'].forEach(function(item) {
             suggestList.push({
-                display: item['item_name'],
+                display: item['name'],
                 value: item['id'],
             });
         });

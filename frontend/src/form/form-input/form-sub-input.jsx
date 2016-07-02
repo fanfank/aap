@@ -31,7 +31,7 @@ var CommonSubInputMixin = { // 子input在初始时要通知父控件的函数
         props = props || this.props;
         const { remoteData, subInputId } = props;
 
-        const remoteDataValue = getRemoteDataValue(props);
+        const remoteDataValue = this.getRemoteDataValue(props);
 
         return (
             props.subInputValue
@@ -41,7 +41,7 @@ var CommonSubInputMixin = { // 子input在初始时要通知父控件的函数
     },
 
     shouldComponentUpdate: function(nextProps, nextState) {
-        if (this._shouldComponentUpdate()) {
+        if (this._shouldComponentUpdate) {
             return this._shouldComponentUpdate(nextProps, nextState);
         }
 
@@ -136,7 +136,7 @@ export let FormSubInput = React.createClass({
                 subInputId = data['pname'];
             }
 
-            switch(data['type']) {
+            switch(data['form_input_type']) {
             case 'string':
                 return (
                     <StringFormSubInput 

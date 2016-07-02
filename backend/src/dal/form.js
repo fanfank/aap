@@ -11,14 +11,14 @@ var buildFieldDict = basic.buildFieldDict;
 var sqlBuilder = require(ROOT_PATH + '/libs/sql');
 
 var db = require(ROOT_PATH + '/db');
-var getReadPool() = db.getReadPool();
-var writePool = db.writePool;
+var getReadPool = db.getReadPool;
+var getWritePool = db.getWritePool;
 
 var FORM_FIELDS = [
-    'id', 'name', 'post_api', 'content_type', 'components',
-    'op_user', 'ctime', 'mtime', 'ext',
+    'id', 'name', 'urlmark', 'post_api', 'content_type', 
+    'components', 'op_user', 'ctime', 'mtime', 'ext',
 ];
-var FORM_TABLE = 'aap_form;'
+var FORM_TABLE = 'aap_form';
 
 exports.addForm = function(r, cb) {
     r.ctime = r.mtime = basic.ts();
@@ -33,7 +33,7 @@ exports.addForm = function(r, cb) {
         )
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -60,7 +60,7 @@ exports.modifyForm = function(r, cb) {
         }
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -79,7 +79,7 @@ exports.deleteForm = function(r, cb) {
         } 
     );
 
-    writePool.query(sql, function(err, rows, fields) {
+    getWritePool().query(sql, function(err, rows, fields) {
         if (!err) {
             cb({ errno: 0, errmsg: 'success' });
             return;
@@ -165,15 +165,14 @@ exports.getForm = function(r, cb) {
     var sql = sqlBuilder.getSqlSelect(
         FORM_TABLE,
         FORM_FIELDS,
-        {
-            'id=': r.id
-        }
+        r.id ? { 'id=': r.id } : { 'urlmark=': r.urlmark }
     );
+
     getReadPool().query(sql, function(err, rows, fields) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {
             cb({
                 errno: -1,
-                errmsg: 'Form ' + r.id + ' not exists',
+                errmsg: 'Form ' + (r.id || r.urlmark) + ' not exists',
                 data: err,
             });
             return;

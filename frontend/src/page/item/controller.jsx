@@ -32,7 +32,7 @@ class ItemCtl {
         let thisCtl = this;
         itemId = parseInt(itemId);
 
-        if (this.Ctl.itemDict[itemId] == undefined || forceUpdate) {
+        if (thisCtl.itemDict[itemId] == undefined || forceUpdate) {
             thisCtl.itemDict[itemId] = new Promise((resolve, reject) => {
                 $.ajax({
                     type: 'GET',
@@ -60,7 +60,7 @@ class ItemCtl {
             });
         }
 
-        return thisCtl.itemCtl[itemId];
+        return thisCtl.itemDict[itemId];
     }
     
     /**

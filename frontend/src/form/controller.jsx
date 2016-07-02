@@ -37,6 +37,12 @@ class FormCtl {
                             reject('Get form data failed');
                             return;
                         }
+
+                        let urlmark = data['data']['urlmark'];
+                        thisCtl.formDict[urlmark] = new Promise((rs, rj) => {
+                            rs(data['data']);
+                        });
+
                         resolve(data['data']);
                     }
                 });
@@ -51,6 +57,41 @@ class FormCtl {
         }
 
         return thisCtl.formDict[formId];
+    }
+
+    getForm(urlmark, forceUpdate) {
+        let thisCtl = this;
+
+        if (thisCtl.formDict[urlmark] == undefined || forceUpdate) {
+            thisCtl.formDict[urlmark] = new Promise((resolve, reject) => {
+                $.ajax({
+                    type: 'GET',
+                    url: FORM_API.URL_GET_FORM,
+                    data: {
+                        ie: 'utf-8',
+                        urlmark: urlmark,
+                    },
+                    success: function(data, status) {
+                        if (basic.statusOk(status) !== ''
+                                || basic.errnoOk(data) !== '') {
+                            reject('Get form data failed');
+                            return;
+                        }
+
+                        resolve(data['data']);
+                    }
+                });
+            });
+            thisCtl.formDict[urlmark].catch((reason) => {
+                console.log(reason);
+                setTimeout(
+                    () => { thisCtl.getForm(urlmark, true); },
+                    5000
+                );
+            });
+        }
+
+        return thisCtl.formDict[urlmark];
     }
 
     /**

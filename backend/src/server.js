@@ -11,6 +11,8 @@ var bootstrapRoutes = require(ROOT_PATH + '/routes/bootstrap');
 
 var bodyParser = require('body-parser');
 
+var db = require(ROOT_PATH + '/db.js');
+
 var app = express();
 app.use( bodyParser.json() );   // support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // support URL-encoded bodies

@@ -5,7 +5,7 @@
 var path = require('path');
 var ROOT_PATH = path.resolve(__dirname, '..');
 
-var formInputDal = require(ROOT_PATH + '/dal/form-input');
+var formInputDal = require(ROOT_PATH + '/dal/form_input');
 var basic = require(ROOT_PATH + '/libs/basic');
 var lz = basic.lz;
 var jr = basic.jsonResp;
@@ -17,12 +17,12 @@ var ACCESS_METHOD_ALL = ['GET', 'POST', 'OPTIONS'];
 
 exports.entrance = function(req, res, next) {
     var ifaceDict = {
-        'add_formInput': [ACCESS_METHOD_POST, addFormInput],
-        'modify_formInput': [ACCESS_METHOD_POST, modifyFormInput],
-        'delete_formInput': [ACCESS_METHOD_POST, deleteFormInput],
-        'get_formInput': [ACCESS_METHOD_GET, getFormInput],
-        'get_formInput_list': [ACCESS_METHOD_GET, getFormInputList],
-        'get_formInput_suggest_list': [ACCESS_METHOD_GET, getFormInputSuggestList],
+        'add_form_input': [ACCESS_METHOD_POST, addFormInput],
+        'modify_form_input': [ACCESS_METHOD_POST, modifyFormInput],
+        'delete_form_input': [ACCESS_METHOD_POST, deleteFormInput],
+        'get_form_input': [ACCESS_METHOD_GET, getFormInput],
+        'get_form_input_list': [ACCESS_METHOD_GET, getFormInputList],
+        'get_form_input_suggest_list': [ACCESS_METHOD_GET, getFormInputSuggestList],
     };
     
     var iface = req.params.iface;
@@ -196,7 +196,7 @@ function getFormInputList(req, res) {
 }
 
 function getFormInputSuggestList(req, res) {
-    user = req.query.user || '';
+    user = req.query.user;
     rq = {
         pn: 1,
         rn: 200,
@@ -212,7 +212,7 @@ function getFormInputSuggestList(req, res) {
         suggestList = [];
         rsp['data']['form_input_list'].forEach(function(formInput) {
             suggestList.push({
-                display: formInput['form_input_name'],
+                display: formInput['name'],
                 value: formInput['id'],
             });
         });

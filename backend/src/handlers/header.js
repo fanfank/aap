@@ -176,7 +176,7 @@ function getHeaderList(req, res) {
 }
 
 function getHeaderSuggestList(req, res) {
-    user = req.query.user || '';
+    user = req.query.user;
     rq = {
         pn: 1,
         rn: 200,
@@ -192,7 +192,7 @@ function getHeaderSuggestList(req, res) {
         suggestList = [];
         rsp['data']['header_list'].forEach(function(header) {
             suggestList.push({
-                display: header['header_name'],
+                display: header['name'],
                 value: header['id'],
             });
         });

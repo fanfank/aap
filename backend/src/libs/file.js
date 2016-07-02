@@ -11,6 +11,10 @@ function Watcher() {
         var thisWatcher = this;
         thisWatcher.fileExists = true;
 
+        if (onceTimeout != 0 && !onceTimeout) {
+            onceTimeout = thisWatcher.options.interval || 5007;
+        }
+
         setTimeout(function() {
             if (fs.existsSync(thisWatcher.path)) {
                 var fileStats = fs.statSync(thisWatcher.path);
@@ -40,7 +44,7 @@ function Watcher() {
                 thisWatcher.lastMtime = null;
                 thisWatcher.fileNotExistsAction();
             }
-        }, onceTimeout || thisWatcher.options.interval || 5007);
+        }, onceTimeout);
     };
 
     this.fileNotExistsAction = function() {
@@ -64,8 +68,10 @@ function Watcher() {
         this.options = options || {};
 
         if (fs.existsSync(this.path)) {
+            console.log("Loading file " + this.path);
             this.fileExistsAction(0);
         } else {
+            console.log("File " + this.pth + " not found.");
             this.fileNotExistsAction();
         }
     };
