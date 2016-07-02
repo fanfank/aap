@@ -30,37 +30,6 @@ var CommonInputMixin = {
         const { formInputData: data } = props;
         return basic.safeGet(data, ['help_message']);
     },
-
-    getRemoteDataValue: function(props, field) {
-        if (this._getRemoteDataValue) {
-            return this._getRemoteDataValue(props, field);
-        }
-
-        props = props || this.props;
-        const { remoteData, formInputData: data } = props;
-        field = field || data['pname'];
-        return basic.safeGet(
-            basic.decode(remoteData), 
-            [field]
-        );
-    },
-
-    componentWillReceiveProps: function(nextProps) {
-        if (this._componentWillReceiveProps) {
-            this._componentWillReceiveProps(nextProps);
-            return;
-        }
-
-        if (nextProps.remoteData != this.props.remoteData) {
-            // 填充远程数据
-            const { formInputData: data } = nextProps;
-            const { setFieldsValue } = nextProps.form;
-
-            let updateDict = {};
-            updateDict[data['pname']] = this.getRemoteDataValue(nextProps);
-            setFieldsValue(updateDict);
-        }
-    },
 };
 
 export let FormInput = React.createClass({
@@ -189,7 +158,7 @@ let StringFormInput = React.createClass({
         const inputProps = this.props.form.getFieldProps(
             data['pname'],
             {
-                initialValue: this.getRemoteDataValue() 
+                initialValue: basic.safeGet(remoteData, [data['pname']])
                     || data['default'] 
                     || '',
             }
@@ -218,7 +187,7 @@ let NumberFormInput = React.createClass({
         const inputProps = this.props.form.getFieldProps(
             data['pname'],
             {
-                initialValue: this.getRemoteDataValue() 
+                initialValue: basic.safeGet(remoteData, [data['pname']])
                     || data['default'] 
                     || 0,
             }
@@ -247,14 +216,14 @@ let DatetimeFormInput = React.createClass({
         const inputProps = this.props.form.getFieldProps(
             data['pname'],
             {
-                initialValue: this.getRemoteDataValue() 
+                initialValue: basic.safeGet(remoteData, [data['pname']])
                     || data['default'] 
                     || new Date()
             }
         );
         
         let format = 'yyyy-MM-dd HH:mm:ss';
-        if (data['detail']) {
+        if (data['detail'] && data['detail'].length > 0) {
             format = basic.deocde(data['detail'], {})['format'] || format;
         }
 
@@ -282,7 +251,7 @@ let TextareaFormInput = React.createClass({
         const inputProps = this.props.form.getFieldProps(
             data['pname'],
             {
-                initialValue: this.getRemoteDataValue() 
+                initialValue: basic.safeGet(remoteData, [data['pname']])
                     || data['default'] 
                     || ''
             }
@@ -329,16 +298,18 @@ let SelectFormInput = React.createClass({
         const inputProps = this.props.form.getFieldProps(
             data['pname'],
             {
-                initialValue: this.getRemoteDataValue() 
+                initialValue: basic.safeGet(remoteData, [data['pname']])
                     || data['default']
             }
         );
+        
         return (
             <Form.Item
                 labelCol={{span: 4}}
                 wrapperCol={{span: 16, offset: 1}}
                 extra={this.getExtraMessage()}
                 label={data['display']}>
+
                 <Select 
                     tags={basic.safeGet(detailContent, ['multi'], false)}
                     {...inputProps}
@@ -361,7 +332,7 @@ let RelationFormInput = React.createClass({
     getInitialState: function() {
         const { remoteData, formInputData: data } = this.props;
         const detailContent = basic.decode(data['detail']);
-        let remoteDataValue = this.getRemoteDataValue();
+        let remoteDataValue = basic.safeGet(remoteData, [data['pname']]);
 
         return {
             relationList: basic.safeGet(
@@ -379,17 +350,17 @@ let RelationFormInput = React.createClass({
         if (nextProps.remoteData != this.props.remoteData) {
             const { remoteData, formInputData: data } = nextProps;
 
-            let remoteDataValue = this.getRemoteDataValue(nextProps);
+            let remoteDataValue = basic.safeGet(remoteData, [data['pname']]);
 
             this.setState({
-                "selectedValue": remoteDataValue,
+                selectedValue: remoteDataValue,
             });
         }
     },
 
     handleChange: function(value, option) {
         this.setState({
-            "selectedValue": value,
+            selectedValue: value,
         });
     },
 
@@ -400,7 +371,7 @@ let RelationFormInput = React.createClass({
         const inputProps = this.props.form.getFieldProps(
             data['pname'],
             {
-                initialValue: selectedValue
+                initialValue: basic.safeGet(remoteData, [data['pname']]) || data['default']
             }
         );
 
@@ -468,7 +439,7 @@ let MutablelistFormInput = React.createClass({
     computeSubInputList: function(props) {
         props = props || this.props;
         let { remoteData, formInputData: data } = props;
-        let valueList = this.getRemoteDataValue() 
+        let valueList = basic.safeGet(remoteData, [data['pname']])
                 || basic.safeGet(data, ['default']);
 
         if (valueList) {
@@ -480,30 +451,18 @@ let MutablelistFormInput = React.createClass({
                 };
             });
             return subInputList;
-
         } else {
             return [];
         }
     },
 
-    // use _xxxMethod to overwrite those in mixins
-    _componentWillReceiveProps: function(nextProps) {
+    componentWillReceiveProps: function(nextProps) {
         if (nextProps.remoteData != this.props.remoteData) {
             let subInputList = this.computeSubInputList(nextProps);
             this.setState({
                 subInputList: subInputList,
             });
         }
-    },
-
-    _getRemoteDataValue: function(props, field) {
-        props = props || this.props;
-        const { remoteData, formInputData: data } = props;
-        field = field || data['pname'];
-        return basic.decode(basic.safeGet(
-            basic.decode(remoteData), 
-            [field]
-        ));
     },
 
     add: function() {
@@ -523,23 +482,19 @@ let MutablelistFormInput = React.createClass({
 
         // 维护id列表
         for (let i = 0; i < newList.length; ++i) {
-            newList[i]["id"] = i;
+            newList[i]['id'] = i;
         }
 
         this.setState(
             {
-                "subInputList": newList,
+                subInputList: newList,
             }, 
             () => { // dummy update
-                this.update("", "");
+                this.update('', '');
             }
         );
     },
 
-    /**
-     * @author  xuruiqi
-     * @desc    更新不可控件的value
-     */
     update: function(targetId, targetValue) {
         const { formInputData: data } = this.props;
         const { setFieldsValue } = this.props.form;
@@ -570,7 +525,7 @@ let MutablelistFormInput = React.createClass({
 
     render: function() {
         const { formInputData: data } = this.props;
-        const { getFieldProps } = this.props.form;
+        const { getFieldProps, getFieldValue } = this.props.form;
         const { subInputList } = this.state;
         const detailContent = basic.decode(data['detail']);
 
@@ -583,14 +538,14 @@ let MutablelistFormInput = React.createClass({
                     <Col span={18}>
                     <FormSubInput 
                         params={this.props.params}
-                        subInputId={subInput["id"]}
-                        subInputValue={subInput["value"]}
-                        prefix={`__dummy_${data["pname"]}_${subInput["id"]}_`}
+                        subInputId={subInput['id']}
+                        subInputValue={subInput['value']}
+                        prefix={`__dummy_${data['pname']}_${subInput['id']}_`}
                         changeCallback={thisInput.update}
-                        formSubInput={detailContent["sub_input"]} />
+                        formSubInput={detailContent['sub_input']} />
                     </Col>
                     <Col span={6}>
-                    <Button onClick={() => thisInput.remove(subInput["id"])}>删除</Button>
+                    <Button onClick={() => thisInput.remove(subInput['id'])}>删除</Button>
                     </Col>
                     </Row>
                 </Form.Item>
@@ -600,21 +555,23 @@ let MutablelistFormInput = React.createClass({
         const primaryItemProps = getFieldProps(
             data['pname'],
             {
-                initialValue: subInputList,
+                initialValue: [],
             }
         );
+        const primaryValue = basic.encode(getFieldValue(data['pname']));
+
         return (
             <Form.Item
                 labelCol={{span: 4}}
                 wrapperCol={{span: 16, offset: 1}}
                 extra={this.getExtraMessage()}
-                label={data["display"]}>
+                label={data['display']}>
 
                 {subInputs}
                 <Button onClick={thisInput.add}>添加</Button>
 
                 <Form.Item>
-                    <Input {...primaryItemProps} disabled />
+                    <Input value={primaryValue} disabled />
                 </Form.Item>
             </Form.Item>
         );
@@ -634,7 +591,7 @@ let MutabledictFormInput = React.createClass({
     computeSubInputList: function(props) {
         props = props || this.props;
         let { remoteData, formInputData: data } = props;
-        let kvDict = this.getRemoteDataValue() 
+        let kvDict = basic.safeGet(remoteData, [data['pname']])
                 || basic.safeGet(data, ['default']);
 
         if (kvDict) {
@@ -653,22 +610,12 @@ let MutabledictFormInput = React.createClass({
         }
     },
 
-    _componentWillReceiveProps: function(nextProps) {
+    componentWillReceiveProps: function(nextProps) {
         if (nextProps.remoteData != this.props.remoteData) {
             this.setState({
-                "subInputList": this.computeSubInputList(nextProps),
+                subInputList: this.computeSubInputList(nextProps),
             });
         }
-    },
-
-    _getRemoteDataValue: function(props, field) {
-        props = props || this.props;
-        const { remoteData, formInputData: data } = props;
-        field = field || data['pname'];
-        return basic.decode(basic.safeGet(
-            basic.decode(remoteData), 
-            [field]
-        ));
     },
 
     add: function() {
@@ -749,7 +696,7 @@ let MutabledictFormInput = React.createClass({
 
     render: function() {
         const { formInputData: data } = this.props;
-        const { getFieldProps } = this.props.form;
+        const { getFieldProps, getFieldValue } = this.props.form;
         const { subInputList } = this.state;
         const detailContent = basic.decode(data['detail']);
         const thisInput = this;
@@ -781,9 +728,11 @@ let MutabledictFormInput = React.createClass({
         const primaryInputProps = getFieldProps(
             data['pname'],
             {
-                initialValue: subInputList,
+                initialValue: {},
             }
         );
+        const primaryValue = basic.encode(getFieldValue(data['pname']));
+
         return (
             <Form.Item
                 labelCol={{span: 4}}
@@ -795,7 +744,7 @@ let MutabledictFormInput = React.createClass({
                 <Button onClick={this.add}>添加</Button>
 
                 <Form.Item>
-                    <Input {...primaryInputProps} disabled />
+                    <Input value={primaryValue} disabled />
                 </Form.Item>
             </Form.Item>
         );
@@ -806,10 +755,10 @@ let MutabledictFormInput = React.createClass({
 let JsonFormInput = React.createClass({
     mixins: [CommonInputMixin],
     getInitialState: function() {
-        const { formInputData: data } = this.props;
+        const { remoteData, formInputData: data } = this.props;
         return {
-            submitValue: this.getRemoteDataValue() 
-                || data['default'] 
+            submitValue: basic.decode(basic.safeGet(remoteData, [data['pname']]))
+                || basic.decode(data['default'])
                 || {}
         };
     },
@@ -830,11 +779,11 @@ let JsonFormInput = React.createClass({
         });
     },
 
-    _componentWillReceiveProps: function(nextProps) {
+    componentWillReceiveProps: function(nextProps) {
         // 如果remoteData发生变化，则更新submitValue
         if (nextProps.remoteData != this.props.remoteData) {
             const { remoteData, formInputData: data } = nextProps;
-            let remoteDataValue = this.getRemoteDataValue();
+            let remoteDataValue = basic.decode(basic.safeGet(remoteData, [data['pname']]));
 
             this.setState({
                 submitValue: remoteDataValue,
@@ -847,23 +796,13 @@ let JsonFormInput = React.createClass({
         }
     },
 
-    _getRemoteDataValue: function(props, field) {
-        props = props || this.props;
-        const { remoteData, formInputData: data } = props;
-        field = field || data['pname'];
-        return basic.decode(basic.safeGet(
-            basic.decode(remoteData), 
-            [field]
-        ));
-    },
-
     render: function() {
-        const { fieldData: fill, formInputData: data } = this.props;
-        const { getFieldProps } = this.props.form;
+        const { remoteData, formInputData: data } = this.props;
+        const { getFieldProps, getFieldValue } = this.props.form;
         const { submitValue } = this.state;
         const detailContent = basic.decode(data['detail']);
 
-        let remoteDataValue = this.getRemoteDataValue();
+        let remoteDataValue = basic.decode(basic.safeGet(remoteData, [data['pname']]));
 
         // 根据structure构建sub input
         let inputList = basic.keys(detailContent['structure']).map((key) => {
@@ -883,9 +822,10 @@ let JsonFormInput = React.createClass({
         const primaryInputProps = getFieldProps(
             data['pname'],
             {
-                initialValue: submitValue || {},
+                initialValue: remoteDataValue || submitValue || {},
             }
         );
+        const primaryValue = basic.encode(getFieldValue(data['pname']));
 
         return (
             <Form.Item 
@@ -897,7 +837,7 @@ let JsonFormInput = React.createClass({
                 {inputList}
 
                 <Form.Item>
-                    <Input {...primaryInputProps} disabled />
+                    <Input value={primaryValue} disabled />
                 </Form.Item>
             </Form.Item>
         );

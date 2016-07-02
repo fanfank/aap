@@ -16,9 +16,22 @@ import { formCtl } from './controller.jsx';
 
 let FormComp = React.createClass({
     getInitialState: function() {
+        let tempFillData = basic.safeGet(
+            this.props.page, 
+            ['fdata', this.props.params.form]
+        );
+        let fillData = {data: {}};
+        if (tempFillData) {
+            tempFillData = basic.decode(tempFillData);
+            basic.keys(tempFillData).forEach((k) => {
+                fillData['data'][k] = tempFillData[k];
+            });
+            this.props.page.fdata[this.props.params.form] = undefined;
+        }
+
         return {
             formData: undefined,
-            remoteData: undefined, // 需要填充的数据
+            remoteData: fillData, // 需要填充的数据
             posting: false,
         };
     },
@@ -29,11 +42,11 @@ let FormComp = React.createClass({
         let urlmark = props.params.form;
         formCtl.getForm(urlmark).then(
             (formData) => { // 成功
-                if (this._isMounted) {
+                //if (this._isMounted) {
                     this.setState({
                         formData: formData
                     });
-                }
+                //}
             },
             (error) => { // 失败
                 console.log(error);
@@ -46,12 +59,12 @@ let FormComp = React.createClass({
             // 需要获取填充的内容
             formCtl.getRemoteData(query).then(
                 (remoteData) => {
-                    if (this._isMounted) {
+                    //if (this._isMounted) {
                         console.log(remoteData);
                         this.setState({
                             remoteData: remoteData,
                         });
-                    }
+                    //}
                 },
                 (error) => {
                     this.setState({
@@ -65,6 +78,9 @@ let FormComp = React.createClass({
 
     componentWillMount: function() {
         this._isMounted = true;
+    },
+
+    componentDidMount: function() {
         this.getData();
     },
 
@@ -96,13 +112,12 @@ let FormComp = React.createClass({
                         && !basic.isVoid(fieldsValue[key])) {
 
                 postData[key] = JSON.stringify(fieldsValue[key]);
-
             } else {
                 postData[key] = fieldsValue[key];
             }
         });
         if (shouldPostJson) {
-            postData = JSON.stringify(postData);
+            postData = basic.encode(postData);
         }
         console.log('postApi:' + postApi);
         console.log(postData);
@@ -124,7 +139,8 @@ let FormComp = React.createClass({
                         || (!basic.isVoid(errno) 
                             && basic.errnoOk(retData) !== '')) {
 
-                    let description = 'Post data failed, status=' + status;
+                    let description = "Post data failed" 
+                            + (basic.safeGet(retData, ["errmsg"]) || "");
                     console.log(description);
                     console.log(postData);
                     Notification['error']({

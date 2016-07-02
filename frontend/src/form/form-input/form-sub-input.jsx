@@ -205,7 +205,7 @@ export let FormSubInput = React.createClass({
                 );
             default: 
                 alert('Unknown input: ' + JSON.stringify(data));
-                return null;
+                return (<div></div>);
             }
         }
     }
@@ -263,7 +263,7 @@ let NumberFormSubInput = React.createClass({
                     onChange={(e) => {
                         changeCallback(subInputId, e);
                     }}
-                    {...data["assignedAttrs"]} />
+                    {...data['assignedAttrs']} />
             </Form.Item>
         );
     }

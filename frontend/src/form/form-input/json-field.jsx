@@ -17,7 +17,7 @@ let CommonJsonFieldMixin = {
     getRemoteDataValue: function(props, field) {
         props = props || this.props;
         if (this._getRemoteDataValue) {
-            return this._getRemoteDataValue(defaultValue, props);
+            return this._getRemoteDataValue(props, field);
         }
 
         const { display, remoteData } = props;
@@ -54,8 +54,8 @@ export let JsonField = React.createClass({
             } else if (hintData.constructor == Object) {
                 return <JsonObjectField {...this.props} />;
             } else {
-                return null;
                 console.warn('impossible here');
+                return null;
             }
             break;
 
@@ -284,7 +284,7 @@ let JsonSubInputWrapperField = React.createClass({
         return (
             <FormSubInput
                 params={this.props.params}
-                remoteData={this.props.remoteData}
+                remoteData={this.props.submitData || this.props.remoteData}
                 subInputId={display}
                 subInputValue={this.getCurrentValue()}
                 prefix={`__dummy_json_${display}_`}
