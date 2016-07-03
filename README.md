@@ -6,10 +6,10 @@ AAP is for admins who want to quickly write an admin platform.
 中文文档请见：<a href="https://github.com/fanfank/aap/edit/master/README-CN.md">README-CN.md</a>    
 
 ## Requirements
-1. MySQL with a database that you can write & read;
-2. Node.
+1. MySQL with a database that you can write & read    
+2. <a href="https://nodejs.org/">Node.js</a>     
 
-## Startup
+## Quick Start
 Simply run the following commands:    
 1. `git clone https://github.com/fanfank/aap.git`    
 2. `cd aap && npm install --verbose`    

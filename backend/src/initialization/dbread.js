@@ -26,23 +26,19 @@ function initReadDb(req, res) {
         return;
     }
 
-    dbConf.detail.aapdb_read_host = req.body.aapdb_read_host;
-    dbConf.detail.aapdb_read_port = req.body.aapdb_read_port;
-    dbConf.detail.aapdb_read_user = req.body.aapdb_read_user;
-    dbConf.detail.aapdb_read_password = req.body.aapdb_read_password;
+    dbConf.detail.aapdb_read_host = req.body.aapdb_read_host || dbConf.detail.aapdb_write_host;
+    dbConf.detail.aapdb_read_port = req.body.aapdb_read_port || dbConf.detail.aapdb_write_port;
+    dbConf.detail.aapdb_read_user = req.body.aapdb_read_user || dbConf.detail.aapdb_write_user;
+    dbConf.detail.aapdb_read_password = req.body.aapdb_read_password || dbConf.detail.aapdb_write_password;
 
     // 检查新的配置是否能读取DB
     var mysql = require('mysql');
     var connectionConf = {
-        host: dbConf.detail.aapdb_read_host
-            || dbConf.detail.aapdb_write_host,
-        port: dbConf.detail.aapdb_read_port
-            || dbConf.detail.aapdb_write_port,
-        user: dbConf.detail.aapdb_read_user
-            || dbConf.detail.aapdb_write_user,
-        password: dbConf.detail.aapdb_read_password
-            || dbConf.detail.aapdb_write_password,
-        database: dbConf.detail.aapdb_name
+        host: dbConf.detail.aapdb_read_host,
+        port: dbConf.detail.aapdb_read_port,
+        user: dbConf.detail.aapdb_read_user,
+        password: dbConf.detail.aapdb_read_password,
+        database: dbConf.detail.aapdb_name,
     };
     var connection = mysql.createConnection(connectionConf);
 

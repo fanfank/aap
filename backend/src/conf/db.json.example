@@ -1,0 +1,1 @@
+{"db_type":"mysql","detail":{"aapdb_name":"aapdb","aapdb_write_host":"127.0.0.1","aapdb_write_port":"3306","aapdb_write_user":"hello","aapdb_write_password":"123456","aapdb_read_host":"127.0.0.1","aapdb_read_port":"3306","aapdb_read_user":"hello","aapdb_read_password":"123456"}}
