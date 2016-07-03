@@ -6,7 +6,7 @@
 import React from "react"
 import { render } from "react-dom"
 import { Router, Route, browserHistory, IndexRoute, Link } from "react-router"
-import { Spin, Menu } from "antd";
+import { QueueAnim, Button, Spin, Menu } from "antd";
 
 import { Form } from "./form/form.jsx";
 import { Page } from "./page/page.jsx";
@@ -39,49 +39,86 @@ let App = React.createClass({
     },
 
     render: function() {
-        const { pageList } = this.state;
-        if (pageList == undefined) {
-            return (
-                <div style={{textAlign: "center", verticalAlign: "center", position: "fixed", top: "50%", left: "50%", marginTop: "-48px", marginLeft: "-48px"}}>
-                    <Spin size={"large"} />
-                    {this.props.children}
-                </div>
-            );
-        } else {
-            return (
-                <div className="ant-layout-topaside">
-                <div>
-                <div className="ant-layout-header">
-                <div className="ant-layout-wrapper">
-                <Menu 
-                    defaultSelectedKeys={["0"]}
-                    selectedKeys={["0"]}
-                    mode={"horizontal"} 
-                    theme="dark"
-                    style={{
-                        lineHeight: '64px', 
-                        fontSize: '15px'
-                    }}>
+        return (
+            <div style={{
+                    textAlign: "center",
+                    verticalAlign: "center",
+                    position: "fixed",
+                    top: "35%",
+                    left: "10%",
+                    right: "10%",
+                    marginTop: "-48px",
+                    marginLeft: "-48px",
+                }}>
 
-                    <Menu.Item key={"0"}>
-                        <Link to="/">Home</Link>
-                    </Menu.Item>
-                    {pageList.map((page) => {
-                        return (
-                            <Menu.Item key={page["id"]}>
-                                <Link to={"/page/" + page["id"]}>{page["page_name"]}</Link>
-                            </Menu.Item>
-                        );
-                    })}
+                <QueueAnim delay={500} style={{ height: 150 }}>
+                    <div key='a'>
+                        <h1
+                            style={{
+                                fontSize: '55px',
+                                fontWeight: 600,
+                                lineHeight: 1.1,
+                            }}
+                            >欢迎来到 AAP</h1>
+                        <br/>
+                        <br/>
+                    </div>
+                    <div key = 'b'>
+                        <Link to="/page/page_admin">
+                        <Button 
+                            style={{
+                                heigth: "500%",
+                            }}
+                            size="large"
+                            type="primary" icon="caret-circle-o-right">立即探索</Button>
+                        </Link>
+                    </div>
+                </QueueAnim>
+            </div>
+        );
+        //const { pageList } = this.state;
+        //if (pageList == undefined) {
+        //    return (
+        //        <div style={{textAlign: "center", verticalAlign: "center", position: "fixed", top: "50%", left: "50%", marginTop: "-48px", marginLeft: "-48px"}}>
+        //            <Spin size={"large"} />
+        //            {this.props.children}
+        //        </div>
+        //    );
+        //} else {
+        //    return (
+        //        <div className="ant-layout-topaside">
+        //        <div>
+        //        <div className="ant-layout-header">
+        //        <div className="ant-layout-wrapper">
+        //        <Menu 
+        //            defaultSelectedKeys={["0"]}
+        //            selectedKeys={["0"]}
+        //            mode={"horizontal"} 
+        //            theme="dark"
+        //            style={{
+        //                lineHeight: '64px', 
+        //                fontSize: '15px'
+        //            }}>
 
-                </Menu>
-                </div>
-                </div>
-                {this.props.children}
-                </div>
-                </div>
-            );
-        }
+        //            <Menu.Item key={"0"}>
+        //                <Link to="/">Home</Link>
+        //            </Menu.Item>
+        //            {pageList.map((page) => {
+        //                return (
+        //                    <Menu.Item key={page["id"]}>
+        //                        <Link to={"/page/" + page["id"]}>{page["page_name"]}</Link>
+        //                    </Menu.Item>
+        //                );
+        //            })}
+
+        //        </Menu>
+        //        </div>
+        //        </div>
+        //        {this.props.children}
+        //        </div>
+        //        </div>
+        //    );
+        //}
     }
 });
 

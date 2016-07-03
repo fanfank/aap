@@ -34,6 +34,6 @@ exports.bootstrap = function(req, res, next) {
             res.status(404).send('".." in path is forbidden');
             return;
         }
-        res.sendFile(ROOT_PATH + '/' + urlpath);
+        res.sendFile(ROOT_PATH + '/static/bootstrap/' + urlpath);
     }
 };

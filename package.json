@@ -1,11 +1,12 @@
 {
-  "name": "aap",
-  "version": "1.0.0",
+  "name": "node-aap",
+  "version": "1.0.1",
   "description": "AAP is an Admin Platform",
   "main": "index.jsx",
   "scripts": {
     "dev": "webpack-dev-server --config frontend/webpack.frontend.dev.config.js --hot --inline --progress --colors",
-    "build": "webpack --progress --profile --colors --config frontend/webpack.frontend.config.js && cp frontend/dist/* backend/src/static/"
+    "build": "webpack --progress --profile --colors --config frontend/webpack.frontend.config.js && cp frontend/dist/* backend/src/static/",
+    "start": "node backend/src/server.js"
   },
   "repository": {
     "type": "git",

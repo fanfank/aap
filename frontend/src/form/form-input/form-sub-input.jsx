@@ -60,11 +60,6 @@ var CommonSubInputMixin = { // 子input在初始时要通知父控件的函数
     },
     
     componentDidMount: function() {
-        if (this._componentDidMount) {
-            this._componentDidMount();
-            return;
-        }
-
         // 这样控件的默认值才可以被正确设置到父控件中
         // NOTE: 其实这种初始化方式会造成Callback泛滥
         //    从而使得表单加载速度在空间增多时变得很慢

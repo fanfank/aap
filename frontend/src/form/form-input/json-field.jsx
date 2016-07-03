@@ -16,10 +16,6 @@ import { FormSubInput } from './form-sub-input.jsx';
 let CommonJsonFieldMixin = {
     getRemoteDataValue: function(props, field) {
         props = props || this.props;
-        if (this._getRemoteDataValue) {
-            return this._getRemoteDataValue(props, field);
-        }
-
         const { display, remoteData } = props;
         field = field || display;
         return basic.safeGet(

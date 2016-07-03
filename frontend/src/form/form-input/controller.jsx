@@ -127,6 +127,7 @@ class FormInputCtl {
         let mts = Date.now();
         let cached = basic.safeGet(this.selectOptionCache, [detailContent['api']]);
         if (cached && (mts - cached['lastTime'] < 10000)) {
+            console.log('cache hit: ' + detailContent['api']);
             thisSel.setState({
                 optionList: cached['data'],
             });

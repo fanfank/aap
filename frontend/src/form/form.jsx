@@ -42,11 +42,12 @@ let FormComp = React.createClass({
         let urlmark = props.params.form;
         formCtl.getForm(urlmark).then(
             (formData) => { // 成功
-                //if (this._isMounted) {
+                //可以优先让表单展现出来，使得看起来没那么慢
+                setTimeout(() => {
                     this.setState({
                         formData: formData
                     });
-                //}
+                }, 500);
             },
             (error) => { // 失败
                 console.log(error);
@@ -59,12 +60,10 @@ let FormComp = React.createClass({
             // 需要获取填充的内容
             formCtl.getRemoteData(query).then(
                 (remoteData) => {
-                    //if (this._isMounted) {
-                        console.log(remoteData);
-                        this.setState({
-                            remoteData: remoteData,
-                        });
-                    //}
+                    console.log(remoteData);
+                    this.setState({
+                        remoteData: remoteData,
+                    });
                 },
                 (error) => {
                     this.setState({
@@ -238,7 +237,12 @@ let FormComp = React.createClass({
         if (data == undefined || data['urlmark'] != this.props.params.form) {
             return (
                 <Modal visible={true}>
+                <div style={{textAlign: 'center'}}>
                 <Spin size="large" />
+                </div>
+                <div style={{textAlign: 'center'}}>
+                <Spin size="large" tip={"正在加载，请耐心等待..."}/>
+                </div>
                 {this.props.children}
                 </Modal>
             );
