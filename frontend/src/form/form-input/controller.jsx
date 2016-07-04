@@ -41,7 +41,7 @@ class FormInputCtl {
                     url: FORM_INPUT_API.URL_GET_FORM_INPUT,
                     data: {
                         ie: "utf-8",
-                        id: formItemId,
+                        id: formInputId,
                     },
                     success: function(data, status) {
                         if (basic.statusOk(status, false) !== ""
