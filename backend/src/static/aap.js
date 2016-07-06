@@ -49052,7 +49052,7 @@
 	    getPopupClassNameFromAlign: _react.PropTypes.any,
 	    onPopupVisibleChange: _react.PropTypes.func,
 	    afterPopupVisibleChange: _react.PropTypes.func,
-	    popup: _react.PropTypes.node.isRequired,
+	    popup: _react.PropTypes.oneOfType([_react.PropTypes.node, _react.PropTypes.func]).isRequired,
 	    popupStyle: _react.PropTypes.object,
 	    prefixCls: _react.PropTypes.string,
 	    popupClassName: _react.PropTypes.string,
@@ -49313,7 +49313,7 @@
 	        maskAnimation: props.maskAnimation,
 	        maskTransitionName: props.maskTransitionName
 	      }),
-	      props.popup
+	      typeof props.popup === 'function' ? props.popup() : props.popup
 	    );
 	  },
 	  setPopupVisible: function setPopupVisible(popupVisible) {
@@ -50986,11 +50986,15 @@
 	  },
 	  render: function render() {
 	    if (this.props.hiddenClassName) {
-	      var className = this.props.className;
-	      if (!this.props.visible) {
-	        className += ' ' + this.props.hiddenClassName;
+	      var props = _extends({}, this.props);
+	      var className = props.className;
+	      if (!props.visible) {
+	        className += ' ' + props.hiddenClassName;
 	      }
-	      return _react2["default"].createElement('div', _extends({}, this.props, { className: className }));
+	      props.className = className;
+	      delete props.hiddenClassName;
+	      delete props.visible;
+	      return _react2["default"].createElement('div', props);
 	    }
 	    if (_react2["default"].Children.count(this.props.children) > 1) {
 	      return _react2["default"].createElement('div', this.props);
@@ -72093,7 +72097,7 @@
 	                        url: FORM_INPUT_API.URL_GET_FORM_INPUT,
 	                        data: {
 	                            ie: "utf-8",
-	                            id: formItemId
+	                            id: formInputId
 	                        },
 	                        success: function success(data, status) {
 	                            if (basic.statusOk(status, false) !== "" || basic.errnoOk(data, false) !== "") {
