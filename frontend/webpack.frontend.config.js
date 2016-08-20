@@ -7,9 +7,13 @@ var HtmlwebpackPlugin = require("html-webpack-plugin")
 var webpack = require("webpack");
 
 var ROOT_PATH = path.resolve(__dirname);
+var VENDOR_PATH = path.resolve(ROOT_PATH, "..", "node_modules"); 
 var APP_PATH = path.resolve(ROOT_PATH, "src");
 var DIST_PATH = path.resolve(ROOT_PATH, "dist");
 var TEM_PATH = path.resolve(ROOT_PATH, "templates");
+
+var pathToReact    = path.resolve(VENDOR_PATH, 'react/dist/react.min');
+var pathToReactDom = path.resolve(VENDOR_PATH, 'react-dom/dist/react-dom.min'); 
 
 module.exports = {
     entry: {
@@ -32,6 +36,11 @@ module.exports = {
         new webpack.DefinePlugin({
             DEBUG: false,
         }),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        }),
     ],
     module: {
         loaders: [
@@ -53,8 +62,13 @@ module.exports = {
                 },
             }
         ],
+        noParse: [pathToReact],
     },
     resolve: {
         extensions: ["", ".js", ".jsx"],
+        alias: {
+            'react': pathToReact,
+            'react-dom': pathToReactDom,
+        },
     },
 };

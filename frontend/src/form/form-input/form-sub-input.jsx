@@ -10,6 +10,7 @@ import {
     DatePicker, Button } from 'antd';
 
 import * as basic from '../../libs/basic.jsx';
+import * as zotools from '../../libs/zotools.jsx';
 
 import { JsonField } from './json-field.jsx';
 import { formSubInputCtl } from './controller.jsx';
@@ -497,10 +498,32 @@ let MutablelistFormSubInput = React.createClass({
         // 因为当前组件render子组件时key使用的是subInputList中
         // 每一个元素的id值
 
+        // 对子组件的值更新要进行合并，防止callback flood对性能的影响
+        this.updateQueue = new zotools.Q();
+
         let subInputList = this.computeSubInputList(this.props);
         return {
             subInputList: subInputList
         };
+    },
+
+    componentWillMount: function() {
+        this.mounted = true;
+        this.setDataTimer(0.1);
+    },
+
+    componentWillUnmount: function() {
+        this.mounted = false;
+        delete this.updateQueue;
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if (nextProps.subInputValue != this.props.subInputValue) {
+            let subInputList = this.computeSubInputList(nextProps);
+            this.setState({
+                subInputList: subInputList,
+            });
+        }
     },
 
     computeSubInputList: function(props) {
@@ -520,19 +543,10 @@ let MutablelistFormSubInput = React.createClass({
         }
     },
 
-    componentWillReceiveProps: function(nextProps) {
-        if (nextProps.subInputValue != this.props.subInputValue) {
-            let subInputList = this.computeSubInputList(nextProps);
-            this.setState({
-                subInputList: subInputList,
-            });
-        }
-    },
-
     add: function() {
         let newList = this.state.subInputList.concat({
             id: this.state.subInputList.length,
-            value: this.props.formSubInputData['default'],
+            value: null,
         });
         this.setState({
             subInputList: newList
@@ -559,35 +573,68 @@ let MutablelistFormSubInput = React.createClass({
         );
     },
 
-    update: function(targetId, targetValue) {
-        const { formSubInputData: data } = this.props;
+    setDataTimer: function(secs) {
+        secs = secs || 0.1;
+        setTimeout(function() {
+            this.dataTimer(secs);
+        }.bind(this), secs * 1000);
+    },
 
+    dataTimer: function(secs) {
+        if (!this.mounted) {
+            return;
+        }
+
+        secs = secs || 0.1;
+        if (this.updateQueue.empty()) {
+            this.setDataTimer(secs);
+            return;
+        }
+
+        // 读取updateQueue里的数据
+        this.updateQueue.swap();
+        let oldQueueData = this.updateQueue.getIns(true);
+
+        let updateDict = {};
+        oldQueueData.forEach((tup) => {
+            updateDict[parseInt(tup[0])] = tup[1];
+        });
+
+        // 将更新合并到现有数据中
+        const { formSubInputData: data } = this.props;
+        
         let newList = [];
         let valueList = [];
         this.state.subInputList.forEach((subInput) => {
             let newInput = {
-                id: subInput['id'],
-                value: subInput['value'],
+                id: subInput["id"],
+                value: subInput["value"],
             };
 
-            if (newInput['id'] == parseInt(targetId)) {
-                newInput['value'] = targetValue;
+            if (updateDict.hasOwnProperty(newInput["id"])) {
+                newInput["value"] = updateDict[newInput["id"]];
             }
 
-            valueList.push(newInput['value']);
-
+            valueList.push(newInput["value"]);
             newList.push(newInput);
         });
 
         // 通知父组件更新值
         this.props.changeCallback(
             this.props.subInputId,
-            valueList // 不需要JSON序列化
+            valueList
         );
-        
+
         this.setState({
-            subInputList: newList
+            subInputList: newList,
         });
+
+        this.updateQueue.clear(true);
+        this.setDataTimer(secs);
+    },
+
+    update: function(targetId, targetValue) {
+        this.updateQueue.push([targetId, targetValue]);
     },
 
     render: function() {
@@ -670,12 +717,11 @@ let MutabledictFormSubInput = React.createClass({
 
     add: function() {
         const { formSubInputData: data } = this.props;
-        const defaultContent = basic.decode(data['default'], {});
 
         let newList = this.state.subInputList.concat({
             id: this.state.subInputList.length,
-            key: defaultContent['key'],
-            value: defaultContent['value'],
+            key: null,
+            value: null,
         });
         this.setState({
             subInputList: newList
@@ -791,30 +837,70 @@ let MutabledictFormSubInput = React.createClass({
 let JsonFormSubInput = React.createClass({
     mixins: [CommonSubInputMixin],
     getInitialState: function() {
+        this.updateQueue = new zotools.Q();
         return {
-            submitValue: basic.decode(this.getCurrentValue()),
+            submitValue: basic.decode(this.getCurrentValue(), {}),
         };
     },
 
-    update(key, value) {
-        const { formSubInputData: data, subInputId } = this.props;
+    componentWillMount: function() {
+        this.mounted = true;
+        this.setDataTimer(0.1);
+    },
 
-        const submitValue = this.state.submitValue;
-        submitValue[key] = value;
+    componentWillUnmount: function() {
+        this.mounted = false;
+        delete this.updateQueue;
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if (nextProps != this.props) {
+            this.setState({
+                submitValue: basic.decode(this.getCurrentValue(nextProps), {}),
+            });
+        }
+    },
+
+    setDataTimer: function(secs) {
+        secs = secs || 0.1;
+        setTimeout(function() {
+            this.dataTimer(secs);
+        }.bind(this), secs * 1000);
+    },
+
+    dataTimer: function(secs) {
+        if (!this.mounted) {
+            return;
+        }
+
+        secs = secs || 0.1;
+        if (this.updateQueue.empty()) {
+            this.setDataTimer(secs);
+            return;
+        }
+
+        // 获取updateQueue里的数据
+        this.updateQueue.swap();
+        let oldQueueData = this.updateQueue.getIns(true);
+        
+        const { formSubInputData: data, subInputId } = this.props;
+        const submitValue = this.state.submitValue || {};
+        oldQueueData.forEach((tup) => {
+            submitValue[tup[0]] = tup[1];
+        });
 
         this.setState({
             submitValue: submitValue,
         });
 
         this.props.changeCallback(subInputId, submitValue);
+
+        this.updateQueue.clear(true);
+        this.setDataTimer(secs);
     },
 
-    componentWillReceiveProps: function(nextProps) {
-        if (nextProps != this.props) {
-            this.setState({
-                submitValue: basic.decode(this.getCurrentValue(nextProps)),
-            });
-        }
+    update(key, value) {
+        this.updateQueue.push([key, value]);
     },
 
     render: function() {
