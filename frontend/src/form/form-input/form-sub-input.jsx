@@ -11,6 +11,7 @@ import {
 
 import * as basic from '../../libs/basic.jsx';
 import * as zotools from '../../libs/zotools.jsx';
+import { DatetimePicker } from '../../libs/widget/datetime-picker.jsx';
 
 import { JsonField } from './json-field.jsx';
 import { formSubInputCtl } from './controller.jsx';

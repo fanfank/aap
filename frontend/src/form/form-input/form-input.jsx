@@ -13,6 +13,7 @@ import $ from 'jquery';
 
 import * as basic from '../../libs/basic.jsx';
 import * as zotools from '../../libs/zotools.jsx';
+import { DatetimePicker } from '../../libs/widget/datetime-picker.jsx';
 
 import { FormSubInput } from "./form-sub-input.jsx";
 import { JsonField } from './json-field.jsx';
@@ -225,7 +226,7 @@ let DatetimeFormInput = React.createClass({
         
         let format = 'yyyy-MM-dd HH:mm:ss';
         if (data['detail'] && data['detail'].length > 0) {
-            format = basic.deocde(data['detail'], {})['format'] || format;
+            format = basic.decode(data['detail'], {})['format'] || format;
         }
 
         return (

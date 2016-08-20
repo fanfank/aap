@@ -28,7 +28,7 @@ exports.addForm = function(r, cb) {
             r,
             [
                 'name', 'post_api', 'content_type', 'components',
-                'op_user', 'ctime', 'mtime', 'ext',
+                'op_user', 'ctime', 'urlmark', 'mtime', 'ext',
             ]
         )
     );
@@ -52,7 +52,7 @@ exports.modifyForm = function(r, cb) {
             r, 
             [
                 'name', 'components', 'op_user',
-                'ctime', 'mtime', 'ext',
+                'ctime', 'mtime', 'urlmark', 'ext',
             ]
         ),
         {

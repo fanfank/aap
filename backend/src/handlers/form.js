@@ -48,9 +48,10 @@ function addForm(req, res) {
     content_type = req.body.content_type || 'application/x-www-form-urlencoded;charset=utf-8';
     components = req.body.components || '';
     op_user = req.body.op_user || '';
+    urlmark = req.body.urlmark || '';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(post_api) || lz(components)) {
+    if (lz(name) || lz(post_api) || lz(components) || lz(urlmark)) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
@@ -58,6 +59,7 @@ function addForm(req, res) {
                 name: name,
                 post_api: post_api,
                 components: components,
+                urlmark: urlmark,
             }
         });
         return;
@@ -68,6 +70,7 @@ function addForm(req, res) {
         post_api: post_api,
         content_type: content_type,
         components: components,
+        urlmark: urlmark,
         op_user: op_user,
         ext: ext,
     };
@@ -84,15 +87,17 @@ function modifyForm(req, res) {
     content_type = req.body.content_type || 'application/x-www-form-urlencoded;charset=utf-8';
     components = req.body.components || '';
     op_user = req.body.op_user || '';
+    urlmark = req.body.urlmark || '';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(post_api) || lz(components) || id <= 0) {
+    if (lz(name) || lz(post_api) || lz(components) || lz(urlmark) || id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 id: id,
                 name: name,
+                urlmark: urlmark,
                 post_api: post_api,
                 components: components,
             }
@@ -106,6 +111,7 @@ function modifyForm(req, res) {
         post_api: post_api,
         content_type: content_type,
         components: components,
+        urlmark: urlmark,
         op_user: op_user,
         ext: ext,
     };
