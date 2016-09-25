@@ -89,4 +89,27 @@ export function isVoid(t) {
     return t === undefined || t === null;
 }
 
+export function mergeDict(base, tobeMerged) {
+    // Caution: this function will change 'base'
+
+    if (base.constructor != Object || tobeMerged.constructor != Object) {
+        return base;
+    }
+
+    for (let k in tobeMerged) {
+        if (!tobeMerged.hasOwnProperty(k)) {
+            continue;
+        }
+
+        let v = tobeMerged[k];
+        if (!base.hasOwnProperty(k)) {
+            base[k] = v;
+        }
+
+        mergeDict(base[k], tobeMerged[k]);
+    }
+
+    return base;
+}
+
 export let hostPortPrefix = '';

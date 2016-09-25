@@ -6,6 +6,7 @@ import React from 'react';
 
 import { Spin } from 'antd';
 
+import { Avatar } from './avatar/avatar.jsx';
 import { Header } from './header/header.jsx';
 import { Lefter } from './lefter/lefter.jsx';
 
@@ -127,6 +128,7 @@ export let Page = React.createClass({
 
             return (
                 <div className="ant-layout-topaside">
+                    <Avatar />
                     <div className="ant-layout-header">
                     <div className="ant-layout-wrapper">
                         <Header params={this.props.params} header={header} />

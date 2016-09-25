@@ -4,3 +4,5 @@ db.json
 dist
 *.bk
 *.swp
+*.secret.jsx
+*.secret.js

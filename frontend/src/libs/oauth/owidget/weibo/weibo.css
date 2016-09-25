@@ -1,0 +1,30 @@
+div.weibo-login-wrapper {
+    width: 175px;
+    font-size: 14px;
+    color: white;
+    background-color: #fe330b;
+    display: inline-block;
+    cursor: pointer;
+    margin: 10px auto 10px auto;
+}
+
+svg.weibo-icon {
+    width: 32px;
+    height: 32px;
+    fill: #fff;
+}
+
+div.weibo-svg-wrapper {
+    display: inline-block;
+    vertical-align: middle;
+    float: left;
+    line-height: 0;
+    margin-left: 10px;
+}
+
+div.weibo-title-wrapper {
+    display: inline-block;
+    float: right;
+    margin-right: 28px;
+    line-height: 32px;
+}

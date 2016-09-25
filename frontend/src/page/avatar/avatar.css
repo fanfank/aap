@@ -1,0 +1,30 @@
+.avatar-wrapper {
+    cursor: pointer;
+    display: flex;
+    text-align: right;
+    vertical-align: middle;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    height: 64px;
+    z-index: 100;
+}
+
+.avatar-picture {
+    border-radius: 50%;
+}
+
+.avatar-uname-block {
+    display: flex;
+    color: white;
+    font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0 20px 0 10px;
+}
+
+.avatar-picture-block {
+    display: flex;
+    border-radius: 50%;
+    background-color: white;
+}

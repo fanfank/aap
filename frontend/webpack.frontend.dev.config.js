@@ -65,6 +65,10 @@ module.exports = {
                 target: "http://127.0.0.1:3093",
                 secure: false,
             },
+            "/statics/*": {
+                target: "http://127.0.0.1:3093",
+                secure: false,
+            },
         },
     },
     devtool: "inline-source-map",
