@@ -22,20 +22,39 @@ let DEFAULT_USER_NAME = sg(pl, ["defaultUserName"], "Anonymous");
 
 export let Avatar = React.createClass({
     getInitialState: function() {
+        Global.registerLoginedEvent(() => {
+            if (this.mounted) { this.setState({"showModal": false}); }
+        });
+
         return {
-            "imgUrl": undefined,
             "showModal": false,
         };  
-    },  
+    },
 
     componentWillMount: function() {
-        this.fetch();
-    },  
+        this.mounted = true;
+    },
+    componentWillUnmount: function() {
+        this.mounted = false;
+    },
 
     handleMenuItemClick: function(item) {
         let key = item["key"];
         let keyPath = item["keyPath"];
-        this.setState({"showModal": true});
+        if (key === "login") {
+            this.setState({"showModal": true});
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/api/oauth/logout",
+                data: Global.getUserInfo(),
+                success: function() {},
+            });
+            basic.delCookie("session");
+            Global.resetUser();
+            Global.refreshUserInfo();
+            this.setState({"showModal": false});
+        }
     },
 
     render: function() {
@@ -60,9 +79,7 @@ export let Avatar = React.createClass({
             );
         }
 
-        let oauthStyle = {
-
-        };
+        let oauthStyle = {};
 
         let modal = <div></div>;
         if (!Global.isLogined()) {
@@ -74,7 +91,7 @@ export let Avatar = React.createClass({
         		    onCancel={() => {this.setState({"showModal": false})}}
                     style={oauthStyle}
         		    >
-                    <Oauth />
+                    <Oauth onLogined={() => this.setState({})} />
         		</Modal>
             );
         }
@@ -84,7 +101,7 @@ export let Avatar = React.createClass({
             <div className="avatar-wrapper">
                 {modal}
                 <div className="avatar-picture-block">
-                    <img width="32px" height="32px" className="avatar-picture" src={this.state.imgUrl}/>
+                    <img width="32px" height="32px" className="avatar-picture" src={Global.getUserAvatar(sg(pl, ["defaultAvatarUrl"], ""))} />
                 </div>
                 <div className="avatar-uname-block">
                 <span>
@@ -94,21 +111,5 @@ export let Avatar = React.createClass({
             </div>
             </Dropdown>
         );  
-    },
-
-    setAvatar: function(avatar) {
-        this.setState({
-            "imgUrl": avatar,
-        });
-    },
-
-    fetch: function(props) {
-        props = props || this.props;
-        let thisIns = this;
-        let uname = Global.getUserName(DEFAULT_USER_NAME);
-        let defaultAvatarUrl = sg(pl, ["defaultAvatarUrl"], "");
-
-        //TODO
-        this.setAvatar(defaultAvatarUrl);
     },
 });

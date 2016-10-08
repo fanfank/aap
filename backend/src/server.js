@@ -7,12 +7,14 @@ var ROOT_PATH = path.resolve(__dirname);
 
 var bodyParser = require('body-parser');
 var express = require('express');
+var cookieParser = require("cookie-parser");
 
 var apiRoutes = require(ROOT_PATH + '/routes/api');
 var bootstrapRoutes = require(ROOT_PATH + '/routes/bootstrap');
 var db = require(ROOT_PATH + '/db.js');
 
 var app = express();
+app.use(cookieParser()); // support cookie parsing
 app.use(bodyParser.json());   // support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // support URL-encoded bodies
   extended: true

@@ -20,6 +20,11 @@ let localeDict = {
     },
     "libs/oauth/oauth": {
         "title": "登     录",
+    },
+    "custom/default-page-content/oauth/weibo/weibo-authorize-callback-page": {
+        "defaultMsg": "出错啦",
+        "ec2msg_0": "登录成功，自动跳转中...",
+        "ec2msg_21330": "返回中...",
     }
 };
 

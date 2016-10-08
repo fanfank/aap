@@ -46,10 +46,10 @@ class HeaderCtl {
             });
             thisCtl.headerDict[headerId].catch((reason) => {
                 console.log(reason);
-                setTimeout(
-                    () => { thisCtl.getHeaderById(headerId, true); },
-                    5000
-                );
+                //setTimeout(
+                //    () => { thisCtl.getHeaderById(headerId, true); },
+                //    5000
+                //);
             });
         }
 

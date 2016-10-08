@@ -34,15 +34,15 @@ export let Lefter = React.createClass({
         );
     },
 
-    componentWillMount: function() {
-        this.getData();
-    },
+    //componentWillMount: function() {
+    //    this.getData();
+    //},
 
-    componentWillReceiveProps: function(nextProps) {
-        if (this.props.lefter != nextProps.lefter) {
-            this.getData(nextProps);
-        }
-    },
+    //componentWillReceiveProps: function(nextProps) {
+    //    if (this.props.lefter != nextProps.lefter) {
+    //        this.getData(nextProps);
+    //    }
+    //},
 
     handleClick: function(e) {
         //console.log("click ", e);
@@ -62,6 +62,7 @@ export let Lefter = React.createClass({
         }
 
         if (data == undefined || data['id'] != this.props.lefter) {
+            this.getData();
             return (
                 <div style={{
                     textAlign: 'center', 

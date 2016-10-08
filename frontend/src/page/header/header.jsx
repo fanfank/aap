@@ -36,16 +36,16 @@ export let Header = React.createClass({
         );
     },
 
-    componentWillMount: function() {
-        this.getData();
-    },
+    //componentWillMount: function() {
+    //    this.getData();
+    //},
 
-    componentWillReceiveProps: function(nextProps) {
-        if (this.props.header != nextProps.header 
-                || this.props.subHeader != nextProps.subHeader) {
-            this.getData(nextProps);
-        }
-    },
+    //componentWillReceiveProps: function(nextProps) {
+    //    if (this.props.header != nextProps.header 
+    //            || this.props.subHeader != nextProps.subHeader) {
+    //        this.getData(nextProps);
+    //    }
+    //},
 
     handleClick: function(e) {
         this.setState({
@@ -61,9 +61,14 @@ export let Header = React.createClass({
 
         const headerIdKey = this.props.subHeader ? 'subHeader' : 'header';
 
+        if (!this.props[headerIdKey]) {
+            return null;
+        }
+
         if (data == undefined || data['id'] != this.props[headerIdKey]) {
+            this.getData();
             return (
-                <div style={{textAlign: "center", verticalAlign: "center", marginTop: "5%"}}>
+                <div style={{textAlign: "center", verticalAlign: "center"}}>
                 <Spin />
                 {this.props.children}
                 </div>

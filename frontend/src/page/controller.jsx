@@ -87,10 +87,10 @@ class PageCtl {
             });
             thisCtl.pageDict[pageId].catch((reason) => {
                 console.log(reason);
-                setTimeout(
-                    () => { thisCtl.getPageById(pageId, true); },
-                    5000
-                );
+                //setTimeout(
+                //    () => { thisCtl.getPageById(pageId, true); },
+                //    5000
+                //);
             });
         }
 
@@ -113,6 +113,7 @@ class PageCtl {
                         if (basic.statusOk(status) !== ''
                                 || basic.errnoOk(data) !== '') {
                             reject('Get page data failed');
+                            thisCtl.pageDict[urlmark] = undefined;
                             return;
                         }
 
@@ -125,10 +126,10 @@ class PageCtl {
             });
             thisCtl.pageDict[urlmark].catch((reason) => {
                 console.log(reason);
-                setTimeout(
-                    () => { thisCtl.getPage(urlmark, true); },
-                    5000
-                );
+                //setTimeout(
+                //    () => { thisCtl.getPage(urlmark, true); },
+                //    5000
+                //);
             });
         }
 

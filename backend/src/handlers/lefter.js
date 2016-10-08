@@ -10,8 +10,8 @@ var basic = require(ROOT_PATH + '/libs/basic');
 var lz = basic.lz;
 var jr = basic.jsonResp;
 
-var ACCESS_METHOD_GET  = ['GET', 'POST'];
-var ACCESS_METHOD_POST = ['POST', 'GET'];
+var ACCESS_METHOD_GET  = ['GET'];
+var ACCESS_METHOD_POST = ['POST'];
 var ACCESS_METHOD_GET_POST = ['GET', 'POST'];
 var ACCESS_METHOD_ALL = ['GET', 'POST', 'OPTIONS'];
 

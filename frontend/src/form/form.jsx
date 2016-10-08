@@ -236,7 +236,10 @@ let FormComp = React.createClass({
 
         if (data == undefined || data['urlmark'] != this.props.params.form) {
             return (
-                <Modal visible={true}>
+                <Modal 
+                    visible={true}
+                    onCancel={this.cancel}
+                    >
                 <div style={{textAlign: 'center'}}>
                 <Spin size="large" />
                 </div>

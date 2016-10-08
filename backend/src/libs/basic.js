@@ -77,7 +77,6 @@ function isVoid(t) {
 exports.isVoid = isVoid;
 
 function jsonResp(res, data) {
-    console.log(encode(data));
     res.json(data);
 };
 exports.jsonResp = jsonResp;
@@ -98,3 +97,4 @@ function buildFieldDict(r, fieldList) {
     return resDict;
 };
 exports.buildFieldDict = buildFieldDict;
+

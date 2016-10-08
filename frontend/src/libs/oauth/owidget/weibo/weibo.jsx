@@ -27,7 +27,7 @@ let WeiboWidget = React.createClass({
         let queryString = $.param({
             "display": "default",
             "client_id": secret["appKey"],
-            "redirect_url": secret["redirect"],
+            "redirect_uri": secret["redirect"],
             "state": secret["state"], // 注意csrf攻击
             "forcelogin": false,
         });

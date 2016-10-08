@@ -53,10 +53,10 @@ class ItemCtl {
             });
             thisCtl.itemDict[itemId].catch((reason) => {
                 console.log(reason);
-                setTimeout(
-                    () => { thisCtl.getItemById(itemId, true); },
-                    5000
-                );
+                //setTimeout(
+                //    () => { thisCtl.getItemById(itemId, true); },
+                //    5000
+                //);
             });
         }
 

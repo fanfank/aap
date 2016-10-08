@@ -49,10 +49,10 @@ class FormCtl {
             });
             thisCtl.formDict[formId].catch((reason) => {
                 console.log(reason);
-                setTimeout(
-                    () => { thisCtl.getFormById(formId, true); },
-                    5000
-                );
+                //setTimeout(
+                //    () => { thisCtl.getFormById(formId, true); },
+                //    5000
+                //);
             });
         }
 
@@ -75,6 +75,8 @@ class FormCtl {
                         if (basic.statusOk(status) !== ''
                                 || basic.errnoOk(data) !== '') {
                             reject('Get form data failed');
+                            thisCtl.formDict[urlmark] = undefined;
+
                             return;
                         }
 
@@ -84,10 +86,10 @@ class FormCtl {
             });
             thisCtl.formDict[urlmark].catch((reason) => {
                 console.log(reason);
-                setTimeout(
-                    () => { thisCtl.getForm(urlmark, true); },
-                    5000
-                );
+                //setTimeout(
+                //    () => { thisCtl.getForm(urlmark, true); },
+                //    5000
+                //);
             });
         }
 

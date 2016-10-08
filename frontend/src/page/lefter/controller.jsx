@@ -47,10 +47,10 @@ class LefterCtl {
             });
             thisCtl.lefterDict[lefterId].catch((reason) => {
                 console.log(reason);
-                setTimeout(
-                    () => { thisCtl.getLefterById(lefterId, true); },
-                    5000
-                );
+                //setTimeout(
+                //    () => { thisCtl.getLefterById(lefterId, true); },
+                //    5000
+                //);
             });
         }
 

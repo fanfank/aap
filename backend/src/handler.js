@@ -6,10 +6,15 @@ var path = require('path');
 var ROOT_PATH = path.resolve(__dirname);
 
 exports.entrance = function(req, res, next) {
-    console.log(req.params.comp + " " + req.params.iface);
-    var compPath = path.resolve(ROOT_PATH, 'handlers', req.params.comp)
-    var comp = require(compPath);
-    comp.entrance(req, res, next);
+    try {
+        console.log(req.params.comp + " " + req.params.iface);
+        var compPath = path.resolve(ROOT_PATH, 'handlers', req.params.comp)
+        var comp = require(compPath);
+        comp.entrance(req, res, next);
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Server is currently under some problems.")
+    }
 };
 
 exports.bootstrap = function(req, res, next) {

@@ -7,22 +7,25 @@ var ROOT_PATH = path.resolve(__dirname, '..');
 
 var formDal = require(ROOT_PATH + '/dal/form');
 var basic = require(ROOT_PATH + '/libs/basic');
+var hdlrmw = require(ROOT_PATH + '/libs/hdlrmw');
 var lz = basic.lz;
 var jr = basic.jsonResp;
 
-var ACCESS_METHOD_GET  = ['GET', 'POST'];
-var ACCESS_METHOD_POST = ['POST', 'GET'];
+var ACCESS_METHOD_GET  = ['GET'];
+var ACCESS_METHOD_POST = ['POST'];
 var ACCESS_METHOD_GET_POST = ['GET', 'POST'];
 var ACCESS_METHOD_ALL = ['GET', 'POST', 'OPTIONS'];
 
+var W_PRE_MW_LIST = [hdlrmw.validateSession];
+
 exports.entrance = function(req, res, next) {
     var ifaceDict = {
-        'add_form': [ACCESS_METHOD_POST, addForm],
-        'modify_form': [ACCESS_METHOD_POST, modifyForm],
-        'delete_form': [ACCESS_METHOD_POST, deleteForm],
-        'get_form': [ACCESS_METHOD_GET, getForm],
-        'get_form_list': [ACCESS_METHOD_GET, getFormList],
-        'get_form_suggest_list': [ACCESS_METHOD_GET, getFormSuggestList],
+        'add_form': [ACCESS_METHOD_POST, addForm, W_PRE_MW_LIST],
+        'modify_form': [ACCESS_METHOD_POST, modifyForm, W_PRE_MW_LIST],
+        'delete_form': [ACCESS_METHOD_POST, deleteForm, W_PRE_MW_LIST],
+        'get_form': [ACCESS_METHOD_GET, getForm, W_PRE_MW_LIST],
+        'get_form_list': [ACCESS_METHOD_GET, getFormList, []],
+        'get_form_suggest_list': [ACCESS_METHOD_GET, getFormSuggestList, []],
     };
     
     var iface = req.params.iface;
@@ -37,6 +40,20 @@ exports.entrance = function(req, res, next) {
             + req.method
         );
         return;
+    }
+
+    if (ifaceDict[iface].length > 2) {
+        var preMwList = ifaceDict[iface][2];
+        for (var i = 0; i < preMwList.length; ++i) {
+            var errmsg = preMwList[i](req, res, next);
+            if (errmsg) {
+                jr(res, {
+                    "errno": -999,
+                    "errmsg": errmsg,
+                });
+                return;
+            }
+        }
     }
 
     ifaceDict[iface][1](req, res);
