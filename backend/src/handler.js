@@ -2,6 +2,7 @@
  * @author  reetsee.com
  * @date    20160621
  */
+var fs = require("fs");
 var path = require('path');
 var ROOT_PATH = path.resolve(__dirname);
 
@@ -18,6 +19,21 @@ exports.entrance = function(req, res, next) {
 };
 
 exports.bootstrap = function(req, res, next) {
+    try {
+        var dbConfPath = ROOT_PATH + "/conf/db.json";
+        if (fs.statSync(dbConfPath)) {
+            res.status(403).send("Database is already init");
+            return;
+        }
+    } catch (e) {
+        if (e.code == "ENOENT") {
+            //do nothing
+        } else {
+            res.status(500).send("Server is currently under some problems.");
+            return;
+        }
+    }
+    
     if (req.method == 'POST') {
         if (req.path.indexOf('dbwrite') != -1) {
             var hdlr = require(ROOT_PATH + '/initialization/dbwrite').initWriteDb;
