@@ -215,12 +215,16 @@ export function strip(s, chars) {
     return rstrip(lstrip(s));
 }
 
-export function setCookie(cname, cvalue, exsecs) {
+export function setCookie(cname, cvalue, exsecs, path, domain) {
 	exsecs = exsecs === 0 ? exsecs : exsecs || 3600 * 24;
+    path = path ? path : "/";
     var d = new Date();
     d.setTime(d.getTime() + (exsecs*1000));
     var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
+    document.cookie = cname + "=" + cvalue 
+            + "; " + expires
+            + ((path) ? "; path=" + path : "")
+            + ((domain) ? "; domain=" + domain : "");
 }
 
 export function getCookie(cname) {
