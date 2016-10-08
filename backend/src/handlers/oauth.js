@@ -19,8 +19,6 @@ var ACCESS_METHOD_POST = ['POST'];
 var ACCESS_METHOD_GET_POST = ['GET', 'POST'];
 var ACCESS_METHOD_ALL = ['GET', 'POST', 'OPTIONS'];
 
-let gUserSession = {};
-
 exports.entrance = function(req, res, next) {
     var ifaceDict = {
         'weibo_authorize': [ACCESS_METHOD_POST, weiboAuthorize],
