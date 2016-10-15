@@ -44,10 +44,6 @@ module.exports = {
     ],
     module: {
         loaders: [
-            {   
-                test: /\.less$/,
-                loader: "style!css!less",
-            },  
             {
                 test: /\.css$/,
                 loader: "style-loader!css-loader",
@@ -58,7 +54,7 @@ module.exports = {
                 include: APP_PATH,
                 query: {
                     presets: ["react", "es2015"],
-                    plugins: [["antd", {style: true}]]
+                    plugins: [["antd", {style: "css"}]]
                 },
             }
         ],

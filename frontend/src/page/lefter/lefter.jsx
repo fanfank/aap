@@ -21,8 +21,8 @@ export let Lefter = React.createClass({
 
     getData: function(props) {
         props = props || this.props;
-        let lefterId = props.lefter;
-        lefterCtl.getLefterById(lefterId).then(
+        let lefterUniqkey = props.lefter;
+        lefterCtl.getLefterByUniqkey(lefterUniqkey).then(
             (lefterData) => {
                 this.setState({ // 成功
                     lefterData: lefterData,
@@ -32,23 +32,6 @@ export let Lefter = React.createClass({
                 console.log(error);
             }
         );
-    },
-
-    //componentWillMount: function() {
-    //    this.getData();
-    //},
-
-    //componentWillReceiveProps: function(nextProps) {
-    //    if (this.props.lefter != nextProps.lefter) {
-    //        this.getData(nextProps);
-    //    }
-    //},
-
-    handleClick: function(e) {
-        //console.log("click ", e);
-        //this.setState({
-        //    currentItemKey: e.key,
-        //});
     },
 
     render: function() {
@@ -61,7 +44,7 @@ export let Lefter = React.createClass({
             return null; 
         }
 
-        if (data == undefined || data['id'] != this.props.lefter) {
+        if (data == undefined || data['uniqkey'] != this.props.lefter) {
             this.getData();
             return (
                 <div style={{
@@ -88,10 +71,10 @@ export let Lefter = React.createClass({
                             selectedKeys={[this.state.currentItemKey]}
                             mode="inline">
 
-                        {componentsContent['item'].map((itemId) => {
+                        {componentsContent['item'].map((itemKey) => {
                             return (
-                                <Menu.Item key={itemId}>
-                                    <Item params={this.props.params} item={itemId} key={itemId} />
+                                <Menu.Item key={itemKey}>
+                                    <Item params={this.props.params} item={itemKey} />
                                 </Menu.Item>
                             );
                         })}

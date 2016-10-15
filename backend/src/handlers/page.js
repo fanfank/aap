@@ -237,7 +237,7 @@ function getPageSuggestList(req, res) {
         rsp['data']['page_list'].forEach(function(page) {
             suggestList.push({
                 display: page['name'],
-                value: page['id'],
+                value: page['urlmark'],
             });
         });
 

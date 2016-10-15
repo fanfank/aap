@@ -6,6 +6,8 @@ var fs = require("fs");
 var path = require('path');
 var ROOT_PATH = path.resolve(__dirname);
 
+var basic = require(ROOT_PATH + '/libs/basic');
+
 exports.entrance = function(req, res, next) {
     try {
         console.log(req.params.comp + " " + req.params.iface);
@@ -20,15 +22,25 @@ exports.entrance = function(req, res, next) {
 
 exports.bootstrap = function(req, res, next) {
     try {
-        var dbConfPath = ROOT_PATH + "/conf/db.json";
-        if (fs.statSync(dbConfPath)) {
+        dbConf = basic.decode(
+            fs.readFileSync(ROOT_PATH + '/conf/db.json', 'utf8'),
+            {}
+        );
+
+        if (basic.safeGet(dbConf, ["detail", "aapdb_read_host"])) {
             res.status(403).send("Database is already init");
             return;
         }
+        //var dbConfPath = ROOT_PATH + "/conf/db.json";
+        //if (fs.statSync(dbConfPath)) {
+        //    res.status(403).send("Database is already init");
+        //    return;
+        //}
     } catch (e) {
         if (e.code == "ENOENT") {
             //do nothing
         } else {
+            console.log(e);
             res.status(500).send("Server is currently under some problems.");
             return;
         }

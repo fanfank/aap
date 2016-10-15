@@ -15,7 +15,7 @@ var getReadPool = db.getReadPool;
 var getWritePool = db.getWritePool;
 
 var LEFTER_FIELDS = [
-    'id', 'name', 'components', 'op_user', 
+    'id', 'name', 'uniqkey', 'components', 'op_user', 
     'ctime', 'mtime', 'ext',
 ];
 var LEFTER_TABLE = 'aap_lefter';
@@ -27,7 +27,7 @@ exports.addLefter = function(r, cb) {
         buildFieldDict(
             r,
             [
-                'name', 'components', 'op_user',
+                'name', 'uniqkey', 'components', 'op_user',
                 'ctime', 'mtime', 'ext',
             ]
         )
@@ -50,7 +50,7 @@ exports.modifyLefter = function(r, cb) {
         buildFieldDict(
             r, 
             [
-                'name', 'components', 'op_user',
+                'name', 'uniqkey', 'components', 'op_user',
                 'ctime', 'mtime', 'ext',
             ]
         ),
@@ -162,12 +162,17 @@ exports.getLefterList = function(r, cb) {
 };
 
 exports.getLefter = function(r, cb) {
+    var conds = {};
+    if (r.id) { conds['id='] = r.id; }
+    if (!basic.lz(r.uniqkey)) { conds['uniqkey='] = r.uniqkey; }
+
     var sql = sqlBuilder.getSqlSelect(
         LEFTER_TABLE,
         LEFTER_FIELDS,
-        {
-            'id=': r.id
-        }
+        conds,
+        null,
+        null,
+        'OR'
     );
     getReadPool().query(sql, function(err, rows, fields) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {

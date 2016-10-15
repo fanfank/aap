@@ -23,8 +23,8 @@ export let Header = React.createClass({
 
     getData: function(props) {
         props = props || this.props;
-        let headerId = props.header || props.subHeader;
-        headerCtl.getHeaderById(headerId).then(
+        let headerUniqkey = props.header || props.subHeader;
+        headerCtl.getHeaderByUniqkey(headerUniqkey).then(
             (headerData) => { // 成功
                 this.setState({
                     headerData: headerData,
@@ -35,17 +35,6 @@ export let Header = React.createClass({
             }
         );
     },
-
-    //componentWillMount: function() {
-    //    this.getData();
-    //},
-
-    //componentWillReceiveProps: function(nextProps) {
-    //    if (this.props.header != nextProps.header 
-    //            || this.props.subHeader != nextProps.subHeader) {
-    //        this.getData(nextProps);
-    //    }
-    //},
 
     handleClick: function(e) {
         this.setState({
@@ -59,13 +48,13 @@ export let Header = React.createClass({
             basic.safeGet(data, ['components'])
         );
 
-        const headerIdKey = this.props.subHeader ? 'subHeader' : 'header';
+        const headerType = this.props.subHeader ? 'subHeader' : 'header';
 
-        if (!this.props[headerIdKey]) {
+        if (!this.props[headerType]) {
             return null;
         }
 
-        if (data == undefined || data['id'] != this.props[headerIdKey]) {
+        if (data == undefined || data['uniqkey'] != this.props[headerType]) {
             this.getData();
             return (
                 <div style={{textAlign: "center", verticalAlign: "center"}}>
@@ -79,7 +68,7 @@ export let Header = React.createClass({
                 return null; 
             }
 
-            const customHeaderAttrs = headerIdKey == 'subHeader' ? {} :
+            const customHeaderAttrs = headerType == 'subHeader' ? {} :
                 {
                     theme: 'dark',
                     style: {
@@ -97,12 +86,10 @@ export let Header = React.createClass({
                     mode="horizontal"
                     {...customHeaderAttrs} >
 
-                    {componentsContent['item'].map((itemId) => {
+                    {componentsContent['item'].map((itemKey) => {
                         return (
-                            <Menu.Item key={itemId}>
-                            <Item 
-                                params={this.props.params} 
-                                item={itemId} />
+                            <Menu.Item key={itemKey}>
+                                <Item params={this.props.params} item={itemKey} />
                             </Menu.Item>
                         );
                     })}

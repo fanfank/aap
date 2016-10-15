@@ -229,7 +229,7 @@ function getFormSuggestList(req, res) {
         rsp['data']['form_list'].forEach(function(form) {
             suggestList.push({
                 display: form['name'],
-                value: form['id'],
+                value: form['urlmark'],
             });
         });
 

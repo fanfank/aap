@@ -15,7 +15,7 @@ var getReadPool = db.getReadPool;
 var getWritePool = db.getWritePool;
 
 var FORM_INPUT_FIELDS = [
-    'id', 'name', 'display', 'pname', 'help_message', 'assignedAttrs',
+    'id', 'name', 'uniqkey', 'display', 'pname', 'help_message', 'assignedAttrs',
     'form_input_type', 'detail', 'op_user', 'ctime', 'mtime', 'ext',
 ];
 var FORM_INPUT_TABLE = 'aap_form_input';
@@ -27,7 +27,7 @@ exports.addFormInput = function(r, cb) {
         buildFieldDict(
             r,
             [
-                'name', 'display', 'pname', 'help_message', 
+                'name', 'uniqkey', 'display', 'pname', 'help_message', 
                 'assignedAttrs', 'form_input_type', 'detail', 
                 'op_user', 'ctime', 'mtime', 'ext',
             ]
@@ -52,7 +52,7 @@ exports.modifyFormInput = function(r, cb) {
         buildFieldDict(
             r, 
             [
-                'name', 'display', 'pname', 'help_message', 
+                'name', 'uniqkey', 'display', 'pname', 'help_message', 
                 'assignedAttrs', 'form_input_type', 'detail', 
                 'op_user', 'ctime', 'mtime', 'ext',
             ]
@@ -164,12 +164,17 @@ exports.getFormInputList = function(r, cb) {
 };
 
 exports.getFormInput = function(r, cb) {
+    var conds = {};
+    if (r.id) { conds['id='] = r.id; }
+    if (!basic.lz(r.uniqkey)) { conds['uniqkey='] = r.uniqkey; }
+
     var sql = sqlBuilder.getSqlSelect(
         FORM_INPUT_TABLE,
         FORM_INPUT_FIELDS,
-        {
-            'id=': r.id
-        }
+        conds,
+        null,
+        null,
+        'OR'
     );
 
     getReadPool().query(sql, function(err, rows, fields) {

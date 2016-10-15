@@ -177,7 +177,8 @@ let FormComp = React.createClass({
     },
 
     cancel: function(e) {
-        browserHistory.push('/page/' + this.props.params.page);
+        //browserHistory.push('/page/' + this.props.params.page);
+        browserHistory.goBack();	
     },
 
     getSubmitButton: function(text, clickCb) {
@@ -298,13 +299,13 @@ let FormComp = React.createClass({
                 <Spin spinning={posting} tip="提交中...">
                 <Form horizontal form={this.props.form} >
                     {componentsContent['form_input'].map(
-                        (formInputId, index) => {
+                        (formInputKey, index) => {
                             return (
                                 <FormInput
                                     key={index}
                                     params={this.props.params}
                                     form={this.props.form} 
-                                    formInput={formInputId} 
+                                    formInput={formInputKey} 
                                     labelCol={{span: 6}}
                                     wrapperCol={{span: 14}}
                                     remoteData={basic.safeGet(

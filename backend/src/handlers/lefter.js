@@ -44,17 +44,19 @@ exports.entrance = function(req, res, next) {
 
 function addLefter(req, res) {
     name = req.body.name || '';
+    uniqkey = req.body.uniqkey || '';
     components = req.body.components || '{}';
     op_user = req.body.op_user || 'guest';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(components)) {
+    if (lz(name) || lz(components) || lz(uniqkey)) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 name: name,
                 components: components,
+                uniqkey: uniqkey,
             }
         });
         return;
@@ -62,6 +64,7 @@ function addLefter(req, res) {
 
     rq = {
         name: name,
+        uniqkey: uniqkey,
         components: components,
         op_user: op_user,
         ext: ext
@@ -75,17 +78,19 @@ function addLefter(req, res) {
 function modifyLefter(req, res) {
     id = req.body.id || 0;
     name = req.body.name || '';
+    uniqkey = req.body.uniqkey || '';
     components = req.body.components || '{}';
     op_user = req.body.op_user || 'guest';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(components) || id <= 0) {
+    if (lz(name) || lz(components) || lz(uniqkey) || id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 id: id,
                 name: name,
+                uniqkey: uniqkey,
                 components: components,
             }
         });
@@ -95,6 +100,7 @@ function modifyLefter(req, res) {
     rq = {
         id: id,
         name: name,
+        uniqkey: uniqkey,
         components: components,
         op_user: op_user,
         ext: ext
@@ -129,19 +135,22 @@ function deleteLefter(req, res) {
 
 function getLefter(req, res) {
     id = req.query.id || 0;
-    
-    if (id <= 0) {
+    uniqkey = req.query.uniqkey || '';
+
+    if (lz(uniqkey) && id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 id: id,
+                uniqkey: uniqkey,
             }
         });
     }
 
     rq = {
-        id: id
+        id: id,
+        uniqkey: uniqkey,
     };
 
     lefterDal.getLefter(rq, function(rsp) {
@@ -193,7 +202,7 @@ function getLefterSuggestList(req, res) {
         rsp['data']['lefter_list'].forEach(function(lefter) {
             suggestList.push({
                 display: lefter['name'],
-                value: lefter['id'],
+                value: lefter['uniqkey'],
             });
         });
 

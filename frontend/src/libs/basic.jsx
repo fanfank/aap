@@ -37,6 +37,21 @@ export function errnoOk(data, shouldAlert) {
     return errorMessage;
 }
 
+export function inAdminPage() { 
+    let url = window.location.href; 
+    let adminPageList = [ 
+        "page_admin", "header_admin", "lefter_admin", 
+        "item_admin", "form_admin", "form_input_admin" 
+    ]; 
+    for (let i = 0; i < adminPageList.length; ++i) { 
+        let urlmark = adminPageList[i]; 
+        if (url.indexOf(urlmark) != -1) { 
+            return true; 
+        } 
+    } 
+    return false;
+}
+
 export function safeGet(data, fieldPath, defaultValue) {
     let targetFieldValue = data;
     for (let i = 0; i < fieldPath.length; ++i) {

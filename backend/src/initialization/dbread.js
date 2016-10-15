@@ -107,7 +107,7 @@ function initReadDb(req, res) {
                 return;
             }
 
-            res.redirect('/bootstrap/finish.html');
+            res.redirect('/');
             return;
         }
         

@@ -49,7 +49,7 @@ function escapeString(val, forbidQualified) {
   return '' + val.replace(/`/g, '``').replace(/\./g, '`.`') + '';
 }
 
-exports.getSqlSelect = function(table, fields, conds, appends, options) {
+exports.getSqlSelect = function(table, fields, conds, appends, options, condsOperator) {
     var sqlPartList = ['SELECT'];
 
     // options
@@ -68,7 +68,8 @@ exports.getSqlSelect = function(table, fields, conds, appends, options) {
 
     // conds
     if (conds) {
-        var strConds = getSqlPart(conds, SQL_PART_COMBINE, ' AND ');
+        condsOperator = condsOperator || 'AND';
+        var strConds = getSqlPart(conds, SQL_PART_COMBINE, ' ' + condsOperator + ' ');
         sqlPartList.push('WHERE ' + strConds);
     }
 

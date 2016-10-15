@@ -19,41 +19,51 @@ class HeaderCtl {
      * @desc    通过header id获取header的详细信息
      */
     getHeaderById(headerId, forceUpdate) {
-        let thisCtl = this;
         headerId = parseInt(headerId);
-
-        if (thisCtl.headerDict[headerId] == undefined || forceUpdate) {
-            thisCtl.headerDict[headerId] = new Promise((resolve, reject) => {
-                $.ajax({
-                    type: 'GET',
-                    url: HEADER_API.URL_GET_HEADER,
-                    data: {
-                        ie: 'utf-8',
-                        id: headerId,
-                    },
-                    success: function(data, status) {
-                        if (basic.statusOk(status) !== ''
-                                || basic.errnoOk(data) !== '') {
-                            reject('Get header data failed');
-                            return;
-                        }
-                        resolve(data['data']);
-                    },
-                    error: function() {
-                        reject('Get header data failed')
-                    }
-                });
-            });
-            thisCtl.headerDict[headerId].catch((reason) => {
-                console.log(reason);
-                //setTimeout(
-                //    () => { thisCtl.getHeaderById(headerId, true); },
-                //    5000
-                //);
-            });
+        if (this.headerDict[headerId] == undefined || forceUpdate) {
+            this.headerDict[headerId] = this.getHeader(
+                HEADER_API.URL_GET_HEADER,
+                {ie: 'utf-8', id: headerId}
+            );
         }
+        return this.headerDict[headerId];
+    }
 
-        return thisCtl.headerDict[headerId];
+    /**
+     * @author  xuruiqi
+     * @desc    通过header unique key获取header的详细信息
+     */
+    getHeaderByUniqkey(uniqkey, forceUpdate) {
+        if (this.headerDict[uniqkey] == undefined || forceUpdate) {
+            this.headerDict[uniqkey] = this.getHeader(
+                HEADER_API.URL_GET_HEADER,
+                {ie: 'utf-8', uniqkey: uniqkey}
+            );
+        }
+        return this.headerDict[uniqkey];
+    }
+
+    getHeader(url, pdata) {
+        return (new Promise((resolve, reject) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: pdata,
+                success: function(data, status) {
+                    if (basic.statusOk(status) !== ''
+                            || basic.errnoOk(data) !== '') {
+                        reject('Get header data failed');
+                        return;
+                    }
+                    resolve(data['data']);
+                },
+                error: function() {
+                    reject('Get header data failed')
+                }
+            });
+        })).catch((reason) => {
+            console.log(reason);
+        });
     }
 };
 export let headerCtl = new HeaderCtl();

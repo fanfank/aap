@@ -61,6 +61,7 @@ exports.entrance = function(req, res, next) {
 
 function addItem(req, res) {
     name = req.body.name || '';
+    uniqkey = req.body.uniqkey || '';
     item_type = req.body.item_type || '';
     display = req.body.display || '';
     icon = req.body.icon || '';
@@ -68,7 +69,7 @@ function addItem(req, res) {
     op_user = req.body.op_user || '';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(item_type) || lz(detail) || lz(display)) {
+    if (lz(name) || lz(item_type) || lz(detail) || lz(display) || lz(uniqkey)) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
@@ -77,6 +78,7 @@ function addItem(req, res) {
                 item_type: item_type,
                 detail: detail,
                 display: display,
+                uniqkey: uniqkey,
             }
         });
         return;
@@ -84,6 +86,7 @@ function addItem(req, res) {
 
     rq = {
         name: name,
+        uniqkey: uniqkey,
         item_type: item_type,
         display: display,
         icon: icon,
@@ -100,6 +103,7 @@ function addItem(req, res) {
 function modifyItem(req, res) {
     id = req.body.id || 0;
     name = req.body.name || '';
+    uniqkey = req.body.uniqkey || '';
     item_type = req.body.item_type || '';
     display = req.body.display || '';
     icon = req.body.icon || '';
@@ -107,13 +111,14 @@ function modifyItem(req, res) {
     op_user = req.body.op_user || '';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(item_type) || lz(detail) || lz(display) || id <= 0) {
+    if (lz(name) || lz(item_type) || lz(detail) || lz(display) || lz(uniqkey) || id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 id: id,
                 name: name,
+                uniqkey: uniqkey,
                 item_type: item_type,
                 detail: detail,
                 display: display,
@@ -125,6 +130,7 @@ function modifyItem(req, res) {
     rq = {
         id: id,
         name: name,
+        uniqkey: uniqkey,
         item_type: item_type,
         display: display,
         icon: icon,
@@ -162,19 +168,22 @@ function deleteItem(req, res) {
 
 function getItem(req, res) {
     id = req.query.id || 0;
+    uniqkey = req.query.uniqkey || '';
     
-    if (id <= 0) {
+    if (lz(uniqkey) && id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 id: id,
+                uniqkey: uniqkey,
             }
         });
     }
 
     rq = {
-        id: id
+        id: id,
+        uniqkey: uniqkey,
     };
 
     itemDal.getItem(rq, function(rsp) {
@@ -226,7 +235,7 @@ function getItemSuggestList(req, res) {
         rsp['data']['item_list'].forEach(function(item) {
             suggestList.push({
                 display: item['name'],
-                value: item['id'],
+                value: item['uniqkey'],
             });
         });
 

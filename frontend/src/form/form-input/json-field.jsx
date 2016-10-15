@@ -68,11 +68,16 @@ export let JsonField = React.createClass({
 
         case 'string':
             let intRepr = parseInt(hintData);
-            if (intRepr && intRepr != 0) {
-                return <JsonSubInputWrapperField {...this.props} />
-            } else {
+            if (hintData == "0") {
                 return <JsonStringField {...this.props} />;
+            } else {
+                return <JsonSubInputWrapperField {...this.props} />
             }
+            //if (intRepr && intRepr != 0) {
+            //    return <JsonSubInputWrapperField {...this.props} />
+            //} else {
+            //    return <JsonStringField {...this.props} />;
+            //}
 
         default:
             console.warn('Unexpeced json field type:' + typeof(hitData));

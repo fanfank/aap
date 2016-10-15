@@ -7,7 +7,7 @@ import React from 'react';
 
 import { 
     Row, Col, Spin, Select, Form, Input, InputNumber, 
-    DatePicker, Button } from 'antd';
+    DatePicker, Button, Notification } from 'antd';
 
 import * as basic from '../../libs/basic.jsx';
 import * as zotools from '../../libs/zotools.jsx';
@@ -15,6 +15,19 @@ import { DatetimePicker } from '../../libs/widget/datetime-picker.jsx';
 
 import { JsonField } from './json-field.jsx';
 import { formSubInputCtl } from './controller.jsx';
+
+function noteSelection(value) {
+    try {
+        if (basic.inAdminPage()) {
+            Notification["info"]({
+                message: "选项值：" + value,
+                duration: 3,
+            });
+        }
+    } catch (e) {
+        console.log(e);
+    }
+}
 
 var CommonSubInputMixin = { // 子input在初始时要通知父控件的函数
     formSubInputLayout: {
@@ -88,8 +101,8 @@ export let FormSubInput = React.createClass({
 
     getData: function(props) {
         props = props || this.props;
-        let formSubInputId = props.formSubInput;
-        formSubInputCtl.getFormSubInputById(formSubInputId).then(
+        let formSubInputUniqkey = props.formSubInput;
+        formSubInputCtl.getFormSubInputByUniqkey(formSubInputUniqkey).then(
             (formSubInputData) => { // 成功
                 this._isMounted && this.setState({
                     formSubInputData: formSubInputData,
@@ -119,7 +132,7 @@ export let FormSubInput = React.createClass({
     render: function() {
         const { formSubInputData: data } = this.state;
 
-        if (data == undefined || data['id'] != this.props.formSubInput) {
+        if (data == undefined || data['uniqkey'] != this.props.formSubInput) {
             return (
                 <Spin size="small" />
             );
@@ -351,6 +364,8 @@ let SelectFormSubInput = React.createClass({
     },
 
     handleChange: function(value, option) {
+		noteSelection(value);
+
         console.log(value);
         const { subInputId } = this.props;
         this.props.changeCallback(subInputId, value);
@@ -419,6 +434,8 @@ let RelationFormSubInput = React.createClass({
     },
 
     handleChange: function(value, option) {
+		noteSelection(value);
+
         console.log(value);
         const { subInputId } = this.props;
         this.props.changeCallback(subInputId, value);

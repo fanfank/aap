@@ -61,17 +61,19 @@ exports.entrance = function(req, res, next) {
 
 function addHeader(req, res) {
     name = req.body.name || '';
+    uniqkey = req.body.uniqkey || '';
     components = req.body.components || '{}';
     op_user = req.body.op_user || 'guest';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(components)) {
+    if (lz(name) || lz(components) || lz(uniqkey)) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 name: name,
                 components: components,
+                uniqkey: uniqkey,
             }
         });
         return;
@@ -79,6 +81,7 @@ function addHeader(req, res) {
 
     rq = {
         name: name,
+        uniqkey: uniqkey,
         components: components,
         op_user: op_user,
         ext: ext
@@ -92,11 +95,12 @@ function addHeader(req, res) {
 function modifyHeader(req, res) {
     id = req.body.id || 0;
     name = req.body.name || '';
+    uniqkey = req.body.uniqkey || '';
     components = req.body.components || '{}';
     op_user = req.body.op_user || 'guest';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(components) || id <= 0) {
+    if (lz(name) || lz(components) || lz(uniqkey) || id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
@@ -104,6 +108,7 @@ function modifyHeader(req, res) {
                 id: id,
                 name: name,
                 components: components,
+                uniqkey: uniqkey,
             }
         });
         return;
@@ -112,6 +117,7 @@ function modifyHeader(req, res) {
     rq = {
         id: id,
         name: name,
+        uniqkey: uniqkey,
         components: components,
         op_user: op_user,
         ext: ext
@@ -146,19 +152,22 @@ function deleteHeader(req, res) {
 
 function getHeader(req, res) {
     id = req.query.id || 0;
+    uniqkey = req.query.uniqkey || '';
     
-    if (id <= 0) {
+    if (lz(uniqkey) && id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 id: id,
+                uniqkey: uniqkey,
             }
         });
     }
 
     rq = {
-        id: id
+        id: id,
+        uniqkey: uniqkey,
     };
 
     headerDal.getHeader(rq, function(rsp) {
@@ -210,7 +219,7 @@ function getHeaderSuggestList(req, res) {
         rsp['data']['header_list'].forEach(function(header) {
             suggestList.push({
                 display: header['name'],
-                value: header['id'],
+                value: header['uniqkey'],
             });
         });
 

@@ -29,38 +29,48 @@ class ItemCtl {
      * @desc    通过item id获取item的详细信息
      */
     getItemById(itemId, forceUpdate) {
-        let thisCtl = this;
         itemId = parseInt(itemId);
-
-        if (thisCtl.itemDict[itemId] == undefined || forceUpdate) {
-            thisCtl.itemDict[itemId] = new Promise((resolve, reject) => {
-                $.ajax({
-                    type: 'GET',
-                    url: ITEM_API.URL_GET_ITEM,
-                    data: {
-                        ie: 'utf-8',
-                        id: itemId,
-                    },
-                    success: function(data, status) {
-                        if (basic.statusOk(status) !== ''
-                                || basic.errnoOk(data) !== '') {
-                            reject('Get item data failed');
-                            return;
-                        }
-                        resolve(data['data']);
-                    }
-                });
-            });
-            thisCtl.itemDict[itemId].catch((reason) => {
-                console.log(reason);
-                //setTimeout(
-                //    () => { thisCtl.getItemById(itemId, true); },
-                //    5000
-                //);
-            });
+        if (this.itemDict[itemId] == undefined || forceUpdate) {
+            this.itemDict[itemId] = this.getItem(
+                ITEM_API.URL_GET_ITEM,
+                {ie: 'utf-8', id: itemId}
+            );
         }
+        return this.itemDict[itemId];
+    }
 
-        return thisCtl.itemDict[itemId];
+    /**
+     * @author  xuruiqi
+     * @desc    通过item uniqkey获取item的详细信息
+     */
+    getItemByUniqkey(uniqkey, forceUpdate) {
+        if (this.itemDict[uniqkey] == undefined || forceUpdate) {
+            this.itemDict[uniqkey] = this.getItem(
+                ITEM_API.URL_GET_ITEM,
+                {ie: 'utf-8', uniqkey: uniqkey}
+            );
+        }
+        return this.itemDict[uniqkey];
+    }
+
+    getItem(url, pdata) {
+        return (new Promise((resolve, reject) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: pdata,
+                success: function(data, status) {
+                    if (basic.statusOk(status) !== ''
+                            || basic.errnoOk(data) !== '') {
+                        reject('Get item data failed');
+                        return;
+                    }
+                    resolve(data['data']);
+                }
+            });
+        })).catch((reason) => {
+            console.log(reason);
+        });
     }
     
     /**
@@ -90,12 +100,11 @@ class ItemCtl {
                     
                     // 将列表中的内容进行替换
                     data['data']['item_list'].forEach((item) => {
-                        let itemId = parseInt(item['id']);
-                        thisCtl.itemDict[itemId] = new Promise((rs, rj) => {
+                        let uniqkey = item['uniqkey'];
+                        thisCtl.itemDict[uniqkey] = new Promise((rs, rj) => {
                             rs(item);
                         });
                     });
-
                     resolve(data['data']['item_list']);
                 }
             });

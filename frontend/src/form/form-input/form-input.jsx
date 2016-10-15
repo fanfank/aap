@@ -7,7 +7,7 @@ import React from 'react';
 
 import { 
     Row, Col, Select, Spin, Form, Input, InputNumber, 
-    DatePicker, Button } from 'antd';
+    DatePicker, Button, Notification } from 'antd';
 
 import $ from 'jquery';
 
@@ -34,6 +34,19 @@ var CommonInputMixin = {
     },
 };
 
+function noteSelection(value) {
+    try {
+        if (basic.inAdminPage()) {
+            Notification["info"]({
+                message: "选项值：" + value,
+                duration: 3,
+            });
+        }
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 export let FormInput = React.createClass({
     getInitialState: function() {
         return {
@@ -43,8 +56,8 @@ export let FormInput = React.createClass({
 
     getData: function(props) {
         props = props || this.props;
-        let formInputId = props.formInput;
-        formInputCtl.getFormInputById(formInputId).then(
+        let formInputUniqkey = props.formInput;
+        formInputCtl.getFormInputByUniqkey(formInputUniqkey).then(
             (formInputData) => { // 成功
                 this.setState({
                     formInputData: formInputData,
@@ -68,7 +81,7 @@ export let FormInput = React.createClass({
 
     render: function() {
         const { formInputData: data } = this.state;
-        if (data == undefined || data['id'] != this.props.formInput) {
+        if (data == undefined || data['uniqkey'] != this.props.formInput) {
             return (
                 <div>
                 <Spin size="small" />
@@ -190,7 +203,7 @@ let NumberFormInput = React.createClass({
             data['pname'],
             {
                 initialValue: basic.safeGet(remoteData, [data['pname']])
-                    || data['default'] 
+                    || (data['default'] == "0" ? 0 : data['default'])
                     || 0,
             }
         );
@@ -292,6 +305,10 @@ let SelectFormInput = React.createClass({
         formInputCtl.getSelectOptionList(this, 'formInputData');
     },
 
+    handleChange: function(value, option) {
+        noteSelection(value);
+    },
+
     render: function() {
         const { remoteData, formInputData: data } = this.props;
         const { optionList } = this.state;
@@ -314,6 +331,7 @@ let SelectFormInput = React.createClass({
 
                 <Select 
                     tags={basic.safeGet(detailContent, ['multi'], false)}
+					onSelect={this.handleChange}
                     {...inputProps}
                     {...this.getAssignedAttrs()}>
 
@@ -361,6 +379,8 @@ let RelationFormInput = React.createClass({
     },
 
     handleChange: function(value, option) {
+	    noteSelection(value);
+
         this.setState({
             selectedValue: value,
         });

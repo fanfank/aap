@@ -15,8 +15,8 @@ var getReadPool = db.getReadPool;
 var getWritePool = db.getWritePool;
 
 var ITEM_FIELDS = [
-    'id', 'name', 'item_type', 'display', 'icon', 'detail',
-    'op_user', 'ctime', 'mtime', 'ext',
+    'id', 'name', 'uniqkey', 'item_type', 'display', 'icon',
+    'detail', 'op_user', 'ctime', 'mtime', 'ext',
 ];
 var ITEM_TABLE = 'aap_item';
 
@@ -27,8 +27,8 @@ exports.addItem = function(r, cb) {
         buildFieldDict(
             r,
             [
-                'name', 'item_type', 'display', 'icon', 'detail',
-                'op_user', 'ctime', 'mtime', 'ext',
+                'name', 'uniqkey', 'item_type', 'display', 'icon',
+                'detail', 'op_user', 'ctime', 'mtime', 'ext',
             ]
         )
     );
@@ -50,8 +50,8 @@ exports.modifyItem = function(r, cb) {
         buildFieldDict(
             r, 
             [
-                'name', 'item_type', 'display', 'icon', 'detail',
-                'op_user', 'ctime', 'mtime', 'ext',
+                'name', 'uniqkey', 'item_type', 'display', 'icon',
+                'detail', 'op_user', 'ctime', 'mtime', 'ext',
             ]
         ),
         {
@@ -161,12 +161,17 @@ exports.getItemList = function(r, cb) {
 };
 
 exports.getItem = function(r, cb) {
+    var conds = {};
+    if (r.id) { conds['id='] = r.id; }
+    if (!basic.lz(r.uniqkey)) { conds['uniqkey='] = r.uniqkey; }
+
     var sql = sqlBuilder.getSqlSelect(
         ITEM_TABLE,
         ITEM_FIELDS,
-        {
-            'id=': r.id
-        }
+        conds,
+        null,
+        null,
+        'OR'
     );
     getReadPool().query(sql, function(err, rows, fields) {
         if (basic.isVoid(rows) || basic.safeGet(rows, ['length'], 0) <= 0) {

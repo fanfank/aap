@@ -30,43 +30,54 @@ class FormInputCtl {
      * @desc    通过form input id获取form input的详细信息
      */
     getFormInputById(formInputId, forceUpdate) {
-        let thisCtl = this;
         formInputId = parseInt(formInputId);
-
-        if (thisCtl.formInputDict[formInputId] == undefined || forceUpdate) {
-            thisCtl.formInputDict[formInputId] = new Promise((resolve, reject) => {
-
-                $.ajax({
-                    type: 'GET',
-                    url: FORM_INPUT_API.URL_GET_FORM_INPUT,
-                    data: {
-                        ie: "utf-8",
-                        id: formInputId,
-                    },
-                    success: function(data, status) {
-                        if (basic.statusOk(status, false) !== ""
-                                || basic.errnoOk(data, false) !== "") {
-                            reject("Get form item data failed");
-                            return;
-                        }
-                        resolve(data['data']);
-                    }
-                });
-            });
-            thisCtl.formInputDict[formInputId].catch((reason) => {
-                console.log(reason);
-                //setTimeout(
-                //    () => { thisCtl.getFormInputById(formInputId, true); },
-                //    5000
-                //);
-            });
+        if (this.formInputDict[formInputId] == undefined || forceUpdate) {
+            this.formInputDict[formInputId] = this.getFormInput(
+                FORM_INPUT_API.URL_GET_FORM_INPUT,
+                {ie: 'utf-8', id: formInputId}
+            );
         }
-
-        return thisCtl.formInputDict[formInputId];
+        return this.formInputDict[formInputId];
+    }
+    getFormSubInputById(formSubInputId, forceUpdate) {
+        return this.getFormInputById(formSubInputId, forceUpdate);
     }
 
-    getFormSubInputById(formSubInputId) {
-        return this.getFormInputById(formSubInputId);
+    /**
+     * @author  xuruiqi
+     * @desc    通过form input unique key获取form input的详细信息
+     */
+    getFormInputByUniqkey(formInputUniqkey, forceUpdate) {
+        if (this.formInputDict[formInputUniqkey] == undefined || forceUpdate) {
+            this.formInputDict[formInputUniqkey] = this.getFormInput(
+                FORM_INPUT_API.URL_GET_FORM_INPUT,
+                {ie: 'utf-8', id: formInputUniqkey}
+            );
+        }
+        return this.formInputDict[formInputUniqkey];
+    }
+    getFormSubInputByUniqkey(formSubInputUniqkey, forceUpdate) {
+        return this.getFormInputByUniqkey(formSubInputUniqkey, forceUpdate);
+    }
+
+    getFormInput(url, pdata) {
+        return (new Promise((resolve, reject) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: pdata,
+                success: function(data, status) {
+                    if (basic.statusOk(status, false) !== ""
+                            || basic.errnoOk(data, false) !== "") {
+                        reject("Get form item data failed");
+                        return;
+                    }
+                    resolve(data['data']);
+                }
+            });
+        })).catch((reason) => {
+            console.log(reason);
+        });
     }
 
     /**
@@ -96,8 +107,8 @@ class FormInputCtl {
 
                     // 将列表中的内容进行替换
                     data['data']['form_input_list'].forEach((formInput) => {
-                        let formInputId = parseInt(formInput['id']);
-                        thisCtl.formInputDict[formInputId] = new Promise((rs, rj) => {
+                        let formInputUniqkey = formInput['uniqkey'];
+                        thisCtl.formInputDict[formInputUniqkey] = new Promise((rs, rj) => {
                             rs(formInput);
                         });
                     });

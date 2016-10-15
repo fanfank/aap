@@ -33,8 +33,8 @@ export let Item = React.createClass({
 
     getData: function(props) {
         props = props || this.props;
-        let itemId = this.props.item;
-        itemCtl.getItemById(itemId).then(
+        let itemUniqkey = this.props.item;
+        itemCtl.getItemByUniqkey(itemUniqkey).then(
             (itemData) => { // 成功
                 this.setState({
                     itemData: itemData,
@@ -58,7 +58,7 @@ export let Item = React.createClass({
 
     render: function() {
         const { itemData: data } = this.state;
-        if (data == undefined || data['id'] != this.props.item) {
+        if (data == undefined || data['uniqkey'] != this.props.item) {
             return (
                 <div>
                 <Spin size="small" />
@@ -87,8 +87,17 @@ let PageItem = React.createClass({
         const { itemData: data } = this.props;
         const detailContent = basic.decode(data['detail']);
 
+        let urlParameters = ''; 
+        if (detailContent['preserve_url_parameters'] == 'yes') {
+            let url = window.location.href;
+            let queryPos = url.indexOf('?');
+            if (queryPos != -1) {
+                urlParameters = url.substring(queryPos + 1); 
+            }   
+        }
+
         return (
-            <Link to={'/page/' + detailContent['page']}>
+            <Link to={'/page/' + detailContent['page'] + "?" + urlParameters}>
             {this.getIcon()}
             {data['display']}
             </Link>

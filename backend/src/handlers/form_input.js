@@ -61,6 +61,7 @@ exports.entrance = function(req, res, next) {
 
 function addFormInput(req, res) {
     name = req.body.name || '';
+    uniqkey = req.body.uniqkey || '';
     display = req.body.display || '';
     pname = req.body.pname || '';
     help_message = req.body.help_message || '';
@@ -70,13 +71,14 @@ function addFormInput(req, res) {
     op_user = req.body.op_user || '';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(form_input_type)) {
+    if (lz(name) || lz(form_input_type) || lz(uniqkey)) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 name: name,
                 form_input_type: form_input_type,
+                uniqkey: uniqkey,
             }
         });
         return;
@@ -86,6 +88,7 @@ function addFormInput(req, res) {
         name: name,
         display: display,
         pname: pname,
+        uniqkey: uniqkey,
         help_message: help_message,
         assignedAttrs: assignedAttrs,
         form_input_type: form_input_type,
@@ -102,6 +105,7 @@ function addFormInput(req, res) {
 function modifyFormInput(req, res) {
     id = req.body.id || 0;
     name = req.body.name || '';
+    uniqkey = req.body.uniqkey || '';
     display = req.body.display || '';
     pname = req.body.pname || '';
     help_message = req.body.help_message || '';
@@ -111,7 +115,7 @@ function modifyFormInput(req, res) {
     op_user = req.body.op_user || '';
     ext = req.body.ext || '';
 
-    if (lz(name) || lz(form_input_type) || id <= 0) {
+    if (lz(name) || lz(form_input_type) || lz(uniqkey) || id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
@@ -119,6 +123,7 @@ function modifyFormInput(req, res) {
                 id: id,
                 name: name,
                 form_input_type: form_input_type,
+                uniqkey: uniqkey,
             }
         });
         return;
@@ -127,6 +132,7 @@ function modifyFormInput(req, res) {
     rq = {
         id: id,
         name: name,
+        uniqkey: uniqkey,
         display: display,
         pname: pname,
         help_message: help_message,
@@ -166,19 +172,22 @@ function deleteFormInput(req, res) {
 
 function getFormInput(req, res) {
     id = req.query.id || 0;
+    uniqkey = req.query.uniqkey || "";
     
-    if (id <= 0) {
+    if (lz(uniqkey) && id <= 0) {
         jr(res, {
             errno: -1,
             errmsg: 'invalid params',
             data: {
                 id: id,
+                uniqkey: uniqkey,
             }
         });
     }
 
     rq = {
-        id: id
+        id: id,
+        uniqkey: uniqkey,
     };
 
     formInputDal.getFormInput(rq, function(rsp) {
@@ -230,7 +239,7 @@ function getFormInputSuggestList(req, res) {
         rsp['data']['form_input_list'].forEach(function(formInput) {
             suggestList.push({
                 display: formInput['name'],
-                value: formInput['id'],
+                value: formInput['uniqkey'],
             });
         });
 
