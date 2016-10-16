@@ -25,6 +25,11 @@ app.use('/bootstrap', bootstrapRoutes);
 app.use('/statics', express.static(ROOT_PATH + '/static'));
 app.use('/', function(req, res, next) { 
     // 检查是否已经初始化数据库，是则返回首页，否则重定向到初始化页面
+    if (req.originalUrl == "" || req.originalUrl == "/") {
+        res.redirect('/page/timecat');
+        return;
+    }
+
     if (db.getWritePool()) {
         res.sendFile(ROOT_PATH + '/static/index.html'); 
     } else {
