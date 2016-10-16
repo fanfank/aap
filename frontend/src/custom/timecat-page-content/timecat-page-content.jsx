@@ -144,10 +144,10 @@ export let TimecatPageContent = React.createClass({
             </div>
             <Form inline onSubmit={this.handleSubmit}>
                 <Form.Item label="起始时间：">
-                    <DatetimePicker defaultValue={this.state.st} onChange={(v)=>{this.setState({st:v})}}/>
+                    <DatetimePicker value={this.state.st} onChange={(v)=>{this.setState({st:v})}}/>
                 </Form.Item>
                 <Form.Item label="截止时间：">
-                    <DatetimePicker defaultValue={this.state.ed} onChange={(v)=>{this.setState({ed:v})}}/>
+                    <DatetimePicker value={this.state.ed} onChange={(v)=>{this.setState({ed:v})}}/>
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" onClick={this.handleSubmit}> 
