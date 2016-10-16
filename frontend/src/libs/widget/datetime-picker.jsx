@@ -66,7 +66,7 @@ export let DatetimePicker = React.createClass({
       showTime: true,
       showDateInput: true,
       disabled: false,
-      value: this.toMoment(this.props.defaultValue),
+      value: this.toMoment(this.props.value || this.props.defaultValue),
     };
   },
 
