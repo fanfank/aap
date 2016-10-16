@@ -50,7 +50,7 @@ module.exports = {
     },
     devServer: {
         host: "0.0.0.0",
-        port: 2993,
+        port: 2893,
         hot: true,
         inline: true,
         progress: true,
