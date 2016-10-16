@@ -129,6 +129,15 @@ export let TimecatPageContent = React.createClass({
         return (
 			<div>
 			<div>
+                <span><b>timecat</b> 是一个对有序日志按时间进行二分定位并输出的工具</span>
+                <br />
+                <span style={{wordWrap: "break-word", wordBreak: "break-all",}}>项目地址：<a href="https://github.com/fanfank/timecat" target="_blank">https://github.com/fanfank/timecat</a></span>
+                <span>下面是演示</span>
+                <br />
+                <hr />
+            </div>
+            <div>
+                <br />
             </div>
             <Form inline onSubmit={this.handleSubmit}>
                 <Form.Item label="起始时间：">
@@ -149,6 +158,9 @@ export let TimecatPageContent = React.createClass({
                         重置
                     </Button>
                 </Form.Item>
+                <div>
+                    <br />
+                </div>
                 <Spin spinning={this.state.loading}>
                 <Collapse 
                     activeKey={this.state.collapseActiveKeys} 
