@@ -126,6 +126,9 @@ export let TimecatPageContent = React.createClass({
             runeNumHint = <Alert message={"已超出 " + (-1 * this.state.runeAvailable) + " 个字符"} type="error" />;
         }
 
+        let dispResult = null;
+
+
         return (
 			<div>
 			<div>
@@ -179,7 +182,7 @@ export let TimecatPageContent = React.createClass({
                             />
                     </Collapse.Panel>
                     <Collapse.Panel header="二分搜索结果" key="logresult">
-                        <pre>
+                        <pre style={{whiteSpace: "pre-wrap", wordWrap: "break-word"}}>
                             {this.state.logResult ? this.state.logResult : "请先点击\"搜索\"按钮哦"}
                         </pre>
                     </Collapse.Panel>
