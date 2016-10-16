@@ -15,3 +15,6 @@ AAP能让你快速地搭建一个精致且不失扩展性的管理后台
 4. `npm run start`    
 5. 在浏览器访问`127.0.0.1:3093`，完成页面引导    
 6. 奇妙的事情开始了    
+
+## Demos    
+Reetsee AAP: <a target="_blank" href="http://aap.reetsee.com/page/page_admin">http://aap.reetsee.com/page/page_admin</a>     

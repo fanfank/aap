@@ -17,3 +17,6 @@ Simply run the following commands:
 4. `npm run start`    
 5. Go to you browser and visit `127.0.0.1:3093`, follow the instructions to init aap tables    
 6. See the magic    
+
+## Demos    
+Reetsee AAP: <a target="_blank" href="http://aap.reetsee.com/page/page_admin">http://aap.reetsee.com/page/page_admin</a>     
