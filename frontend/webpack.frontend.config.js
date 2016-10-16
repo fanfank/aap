@@ -22,8 +22,8 @@ module.exports = {
     output: {
         path: DIST_PATH,
         publicPath: "/statics",
-        filename: "aap.js",
-        //filename: "[hash].[name].js",
+        //filename: "aap.js",
+        filename: "bud.[hash].[name].js",
     },
     plugins: [
         new HtmlwebpackPlugin({
