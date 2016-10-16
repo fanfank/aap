@@ -16,8 +16,32 @@ export let Lefter = React.createClass({
     getInitialState: function() {
         return {
             lefterData: undefined,
+            currentItemKey: undefined,
+            pageItemDict: {},
         };
     },
+
+    componentWillReceiveProps: function(nextProps) {
+        let pageUrlMark = nextProps.params.page;
+        this.setState({
+            currentItemKey: '' + this.state.pageItemDict[pageUrlMark],
+        });
+    },
+
+    handleClick: function(itemKey) {
+        this.setState({
+            currentItemKey: '' + itemKey,
+        });
+    },
+
+    registerPageItem: function(itemKey, pageUrlMark) {
+        let { pageItemDict } = this.state;
+        pageItemDict[pageUrlMark] = itemKey;
+        this.setState({
+            currentItemKey: '' + pageItemDict[this.props.params.page],
+            pageItemDict: pageItemDict,
+        }); 
+    }, 
 
     getData: function(props) {
         props = props || this.props;
@@ -74,7 +98,10 @@ export let Lefter = React.createClass({
                         {componentsContent['item'].map((itemKey) => {
                             return (
                                 <Menu.Item key={itemKey}>
-                                    <Item params={this.props.params} item={itemKey} />
+                                    <Item 
+										registerPageItem={this.registerPageItem}
+										params={this.props.params} 
+										item={itemKey} />
                                 </Menu.Item>
                             );
                         })}

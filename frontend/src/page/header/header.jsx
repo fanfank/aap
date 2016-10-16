@@ -18,7 +18,15 @@ export let Header = React.createClass({
         return {
             headerData: undefined,
             currentItemKey: undefined, //this.props.params.page,
+            pageItemDict: {},
         };
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        let pageUrlMark = nextProps.params.page;
+        this.setState({
+            currentItemKey: '' + this.state.pageItemDict[pageUrlMark],
+        });
     },
 
     getData: function(props) {
@@ -39,6 +47,15 @@ export let Header = React.createClass({
     handleClick: function(e) {
         this.setState({
             currentItemKey: e.key,
+        });
+    },
+
+    registerPageItem: function(itemKey, pageUrlMark) {
+        let { pageItemDict } = this.state;
+        pageItemDict[pageUrlMark] = itemKey;
+        this.setState({
+            currentItemKey: '' + pageItemDict[this.props.params.page],
+            pageItemDict: pageItemDict,
         });
     },
 
@@ -89,7 +106,10 @@ export let Header = React.createClass({
                     {componentsContent['item'].map((itemKey) => {
                         return (
                             <Menu.Item key={itemKey}>
-                                <Item params={this.props.params} item={itemKey} />
+                                <Item 
+									registerPageItem={this.registerPageItem}
+									params={this.props.params} 
+									item={itemKey} />
                             </Menu.Item>
                         );
                     })}
