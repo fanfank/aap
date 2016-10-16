@@ -64,6 +64,10 @@ module.exports = {
                 target: "http://127.0.0.1:3093",
                 secure: false,
             },
+            "/timecat/*": {
+                target: "http://127.0.0.1:3193",
+                secure: false,
+            },
         },
     },
     devtool: "inline-source-map",

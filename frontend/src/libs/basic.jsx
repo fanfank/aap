@@ -4,7 +4,7 @@
  */
 
 export function statusOk(status, shouldAlert) {
-    shouldAlert = shouldAlert || true;
+    shouldAlert = shouldAlert == undefined ? true : shouldAlert;
 
     if (status === "success") {
         return "";
@@ -21,7 +21,7 @@ export function statusOk(status, shouldAlert) {
 }
 
 export function errnoOk(data, shouldAlert) {
-    shouldAlert = shouldAlert || true;
+    shouldAlert = shouldAlert == undefined ? true : shouldAlert;
 
     if (data["errno"] == 0) {
         return "";

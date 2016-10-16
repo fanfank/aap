@@ -43,13 +43,14 @@ const timePickerElement = <TimePickerPanel />;
 
 export let DatetimePicker = React.createClass({
   propTypes: {
-    defaultValue: React.PropTypes.object,
+    //defaultValue: React.PropTypes.object,
     defaultCalendarValue: React.PropTypes.object,
   },
 
   toMoment: function(v) {
     if (v && v.constructor === String) {
-        v = new Date(v);
+        //v = new Date(v); //This line will cause bug in safari
+        v = new Date(v.replace(/-/g, "/"));
     }
     if (v && v.constructor === Date) {
         v = moment(v);
@@ -108,8 +109,8 @@ export let DatetimePicker = React.createClass({
       showDateInput={state.showDateInput}
       disabledDate={null}
     />);
-    return (<div style={{ width: 400 }}>
-      <div style={{
+    return (<span style={{ width: 250 }}>
+      <span style={{
         boxSizing: 'border-box',
         position: 'relative',
         display: 'block',
@@ -130,7 +131,7 @@ export let DatetimePicker = React.createClass({
                 <span tabIndex="0">
                 <input
                   placeholder="请选择时间"
-                  style={{ width: 250 }}
+                  style={{ width: 180 }}
                   disabled={state.disabled}
                   readOnly
                   tabIndex="-1"
@@ -142,7 +143,7 @@ export let DatetimePicker = React.createClass({
             }
           }
         </DatePicker>
-      </div>
-    </div>);
+      </span>
+    </span>);
   },
 });

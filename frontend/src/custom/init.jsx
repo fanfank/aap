@@ -6,3 +6,8 @@ export {
     WeiboAuthorizeCallbackPage,
     WeiboUnauthorizeCallbackPage,
 }
+
+import { TimecatPageContent } from "./timecat-page-content/timecat-page-content.jsx";
+export {
+    TimecatPageContent,
+}
