@@ -68,7 +68,7 @@ export let Item = React.createClass({
         } else {
             switch(data['item_type']) {
             case 'page':
-                return (<PageItem params={this.props.params} itemData={data} />);
+                return (<PageItem params={this.props.params} registerPageItem={this.props.registerPageItem} params={this.props.params} itemData={data} />);
             case 'form':
                 return (<FormItem params={this.props.params} itemData={data} />);
             case 'hyperlink':
@@ -83,6 +83,17 @@ export let Item = React.createClass({
 
 let PageItem = React.createClass({
     mixins: [CommonItemMixin],
+
+    componentDidMount: function() {
+		let props = this.props;
+        const { itemData: data } = props;
+        const detailContent = basic.decode(data["detail"]);
+    
+        if (props.registerPageItem) {
+            props.registerPageItem(data['uniqkey'], detailContent['page']);
+        }
+    },  
+
     render: function() {
         const { itemData: data } = this.props;
         const detailContent = basic.decode(data['detail']);
@@ -127,7 +138,7 @@ let HyperlinkItem = React.createClass({
         const detailContent = basic.decode(data['detail']);
 
         return (
-            <a target="_blank" href={detailContent['href']}>{this.getIcon()}{data['display']}</a>
+            <a target={detailContent["target"]} href={detailContent['href']}>{this.getIcon()}{data['display']}</a>
         );
     }
 });
