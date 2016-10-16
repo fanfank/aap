@@ -72,6 +72,7 @@ function addLefter(req, res) {
 
     lefterDal.addLefter(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -108,6 +109,7 @@ function modifyLefter(req, res) {
 
     lefterDal.modifyLefter(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -122,6 +124,7 @@ function deleteLefter(req, res) {
                 id: id,
             }
         });
+        return;
     }
 
     rq = {
@@ -130,6 +133,7 @@ function deleteLefter(req, res) {
 
     lefterDal.deleteLefter(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -146,6 +150,7 @@ function getLefter(req, res) {
                 uniqkey: uniqkey,
             }
         });
+        return;
     }
 
     rq = {
@@ -155,6 +160,7 @@ function getLefter(req, res) {
 
     lefterDal.getLefter(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -181,6 +187,7 @@ function getLefterList(req, res) {
 
     lefterDal.getLefterList(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -213,5 +220,6 @@ function getLefterSuggestList(req, res) {
                 suggest_list: suggestList,
             },
         });
+        return;
     });
 }

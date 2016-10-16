@@ -94,6 +94,7 @@ function addForm(req, res) {
 
     formDal.addForm(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -135,6 +136,7 @@ function modifyForm(req, res) {
 
     formDal.modifyForm(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -149,6 +151,7 @@ function deleteForm(req, res) {
                 id: id,
             }
         });
+        return;
     }
 
     rq = {
@@ -157,6 +160,7 @@ function deleteForm(req, res) {
 
     formDal.deleteForm(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -173,6 +177,7 @@ function getForm(req, res) {
                 urlmark: urlmark,
             }
         });
+        return;
     }
 
     var rq = {
@@ -182,6 +187,7 @@ function getForm(req, res) {
 
     formDal.getForm(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -208,6 +214,7 @@ function getFormList(req, res) {
 
     formDal.getFormList(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -240,5 +247,6 @@ function getFormSuggestList(req, res) {
                 suggest_list: suggestList,
             },
         });
+        return;
     });
 }

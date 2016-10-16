@@ -96,6 +96,7 @@ function addPage(req, res) {
     // 插入数据库
     pageDal.addPage(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -139,6 +140,7 @@ function modifyPage(req, res) {
     // 修改数据库
     pageDal.modifyPage(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -163,6 +165,7 @@ function deletePage(req, res) {
     // 从数据库删除
     pageDal.deletePage(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -190,6 +193,7 @@ function getPage(req, res) {
 
     pageDal.getPage(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -216,6 +220,7 @@ function getPageList(req, res) {
     
     pageDal.getPageList(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -248,5 +253,6 @@ function getPageSuggestList(req, res) {
                 suggest_list: suggestList,
             },
         });
+        return;
     });
 };

@@ -123,6 +123,7 @@ function logout(req, res) {
         errno: 0,
         errmsg: "success",
     });
+    return;
 }
 
 function getBasicUserInfo(req, res) {
