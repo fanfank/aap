@@ -89,6 +89,7 @@ function addHeader(req, res) {
 
     headerDal.addHeader(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -125,6 +126,7 @@ function modifyHeader(req, res) {
 
     headerDal.modifyHeader(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -139,6 +141,7 @@ function deleteHeader(req, res) {
                 id: id,
             }
         });
+        return;
     }
 
     rq = {
@@ -147,6 +150,7 @@ function deleteHeader(req, res) {
 
     headerDal.deleteHeader(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -163,6 +167,7 @@ function getHeader(req, res) {
                 uniqkey: uniqkey,
             }
         });
+        return;
     }
 
     rq = {
@@ -172,6 +177,7 @@ function getHeader(req, res) {
 
     headerDal.getHeader(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -198,6 +204,7 @@ function getHeaderList(req, res) {
 
     headerDal.getHeaderList(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -230,5 +237,6 @@ function getHeaderSuggestList(req, res) {
                 suggest_list: suggestList,
             },
         });
+        return;
     });
 }

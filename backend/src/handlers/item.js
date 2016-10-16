@@ -97,6 +97,7 @@ function addItem(req, res) {
 
     itemDal.addItem(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -141,6 +142,7 @@ function modifyItem(req, res) {
 
     itemDal.modifyItem(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -155,6 +157,7 @@ function deleteItem(req, res) {
                 id: id,
             }
         });
+        return;
     }
 
     rq = {
@@ -163,6 +166,7 @@ function deleteItem(req, res) {
 
     itemDal.deleteItem(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -179,6 +183,7 @@ function getItem(req, res) {
                 uniqkey: uniqkey,
             }
         });
+        return;
     }
 
     rq = {
@@ -188,6 +193,7 @@ function getItem(req, res) {
 
     itemDal.getItem(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -214,6 +220,7 @@ function getItemList(req, res) {
 
     itemDal.getItemList(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -246,5 +253,6 @@ function getItemSuggestList(req, res) {
                 suggest_list: suggestList,
             },
         });
+        return;
     });
 };

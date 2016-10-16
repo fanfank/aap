@@ -99,6 +99,7 @@ function addFormInput(req, res) {
 
     formInputDal.addFormInput(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 };
 
@@ -145,6 +146,7 @@ function modifyFormInput(req, res) {
 
     formInputDal.modifyFormInput(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -159,6 +161,7 @@ function deleteFormInput(req, res) {
                 id: id,
             }
         });
+        return;
     }
 
     rq = {
@@ -167,6 +170,7 @@ function deleteFormInput(req, res) {
 
     formInputDal.deleteFormInput(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -183,6 +187,7 @@ function getFormInput(req, res) {
                 uniqkey: uniqkey,
             }
         });
+        return;
     }
 
     rq = {
@@ -192,6 +197,7 @@ function getFormInput(req, res) {
 
     formInputDal.getFormInput(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -218,6 +224,7 @@ function getFormInputList(req, res) {
 
     formInputDal.getFormInputList(rq, function(rsp) {
         jr(res, rsp);
+        return;
     });
 }
 
@@ -250,5 +257,6 @@ function getFormInputSuggestList(req, res) {
                 suggest_list: suggestList,
             },
         });
+        return;
     });
 }

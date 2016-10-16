@@ -68,7 +68,7 @@ export let JsonField = React.createClass({
 
         case 'string':
             let intRepr = parseInt(hintData);
-            if (hintData == "0") {
+            if (hintData == "0" || hintData == "") {
                 return <JsonStringField {...this.props} />;
             } else {
                 return <JsonSubInputWrapperField {...this.props} />
