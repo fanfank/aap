@@ -168,12 +168,13 @@ function getBasicUserInfo(req, res) {
                 var data = basic.decode(body, {"error_code": -1, "error": "unknown failure"});
 
                 var errno = sg(data, ["error_code"], 0);
-                if (error || response.statusCode != 200 || errno != 0) {
+                var statusCode = sg(response, ["statusCode"], -999)
+                if (error || statusCode != 200 || errno != 0) {
                     jr(res, {
                         errno: -1,
                         errmsg: "Get weibo user info failed, "
                             + "error=[" + error + "], "
-                            + "status=[" + response.statusCode+ "], "
+                            + "status=[" + statusCode + "], "
                             + "body=[" + body + "]",
                     });
                     return;
