@@ -21,7 +21,7 @@ module.exports = {
     },
     output: {
         path: DIST_PATH,
-        publicPath: "/statics",
+        publicPath: "http://7xsgk1.com1.z0.glb.clouddn.com",
         //filename: "aap.js",
         filename: "bud.[hash].[name].js",
     },
