@@ -14,6 +14,8 @@ import { pageCtl } from "./page/controller.jsx";
 
 import "./layout.css";
 
+let _gLastPage = undefined;
+
 let App = React.createClass({
     getInitialState: function() {
         return {
@@ -84,18 +86,34 @@ render((
         <Route 
             path="/" 
             component={App} 
-            onEnter={({params})=>{_czc.push(["_trackPageview","/"]);}}
+            onEnter={({params})=>{
+                let nextPath = "/";
+                if (_gLastPage !== undefined) {
+                    _czc.push(["_trackPageview", nextPath, _gLastPage]);
+                }
+                if (window.location.origin) {
+                    _gLastPage = window.location.origin + nextPath;
+                } else {
+                    _gLastPage = null;
+                }
+            }}
 			/>
         <Route 
             path="/page/:page" 
             component={Page}
-            onEnter={({params})=>{_czc.push(["_trackPageview","/page/"+params.page]);}}
+            onEnter={({params})=>{
+                let nextPath = "/page/" + params.page;
+                if (_gLastPage !== undefined) {
+                    _czc.push(["_trackPageview", nextPath, _gLastPage]);
+                }
+                if (window.location.origin) {
+                    _gLastPage = window.location.origin + nextPath;
+                } else {
+                    _gLastPage = null;
+                }
+            }}
             >
-            <Route 
-                path="form/:form" 
-                component={Form} 
-                onEnter={({params})=>{_czc.push(["_trackPageview","/page/"+params.page+"/form/"+params.form]);}}
-                />
+            <Route path="form/:form" component={Form} />
         </Route>
     </Router>
 ), document.getElementById("content"));
