@@ -11,6 +11,7 @@ import { Header } from './header/header.jsx';
 import { Lefter } from './lefter/lefter.jsx';
 
 import * as basic from '../libs/basic.jsx';
+import G from "../libs/global.jsx";
 
 import { pageCtl } from './controller.jsx';
 
@@ -20,6 +21,7 @@ import * as contentProvider from '../custom/init.jsx';
 
 export let Page = React.createClass({
     getInitialState: function() {
+        this.isMobile = G.isMobile();
         return {
             'pageData': undefined,
             'contentProviderClass': undefined,
@@ -118,7 +120,7 @@ export let Page = React.createClass({
             let SubHeaderContent = null;
             if (subHeader) {
                 SubHeaderContent = (
-                    <div className="ant-layout-subheader">
+                    <div className={"ant-layout-subheader" + (this.isMobile ? "-mobile" : "")}>
                     <div className="ant-layout-wrapper">
                         <Header params={this.props.params} subHeader={subHeader} />
                     </div>
@@ -129,7 +131,7 @@ export let Page = React.createClass({
             return (
                 <div className="ant-layout-topaside">
                     <Avatar />
-                    <div className="ant-layout-header">
+                    <div className={"ant-layout-header" + (this.isMobile ? "-mobile" : "")}>
                     <div className="ant-layout-wrapper">
                         <Header params={this.props.params} header={header} />
                     </div>

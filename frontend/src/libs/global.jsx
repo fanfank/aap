@@ -15,6 +15,7 @@ class G {
             },
         };
         this.loginedEventList = [];
+        this.mobile = window.location.href.indexOf("mobile=1") != -1 ? true : false;
         
         this.refreshUserInfo();
     }
@@ -109,6 +110,14 @@ class G {
                 this.resetUser();
             }.bind(this)
         });
+    }
+
+    isMobile() {
+        return this.mobile;
+    }
+
+    setMobile(mobile) {
+        this.mobile = mobile;
     }
 }
 

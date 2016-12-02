@@ -5,9 +5,10 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import { Menu, Spin } from 'antd';
+import { Icon, Dropdown, Menu, Spin } from 'antd';
 
 import * as basic from '../../libs/basic.jsx';
+import G from "../../libs/global.jsx";
 
 import { Item } from '../item/item.jsx';
 
@@ -15,6 +16,7 @@ import { headerCtl } from './controller.jsx';
 
 export let Header = React.createClass({
     getInitialState: function() {
+        this.isMobile = G.isMobile();
         return {
             headerData: undefined,
             currentItemKey: undefined, //this.props.params.page,
@@ -53,6 +55,7 @@ export let Header = React.createClass({
     registerPageItem: function(itemKey, pageUrlMark) {
         let { pageItemDict } = this.state;
         pageItemDict[pageUrlMark] = itemKey;
+
         this.setState({
             currentItemKey: '' + pageItemDict[this.props.params.page],
             pageItemDict: pageItemDict,
@@ -85,7 +88,7 @@ export let Header = React.createClass({
                 return null; 
             }
 
-            const customHeaderAttrs = headerType == 'subHeader' ? {} :
+            const customHeaderAttrs = this.isMobile || headerType == 'subHeader' ? {} :
                 {
                     theme: 'dark',
                     style: {
@@ -94,9 +97,7 @@ export let Header = React.createClass({
                     }
                 };
 
-            return (
-                // 展示顶部导航
-                <div>
+            const menu = (
                 <Menu 
                     onClick={this.handleClick}
                     selectedKeys={[this.state.currentItemKey]}
@@ -114,9 +115,27 @@ export let Header = React.createClass({
                         );
                     })}
                 </Menu>
-                {this.props.children}
-                </div>
             );
+
+            if (this.isMobile) {
+                return (
+                    <div>
+                    <Dropdown overlay={menu} trigger={['click']}>
+                        <a href="#">
+                            {"导航"} <Icon type="down" />
+                        </a>
+                    </Dropdown>
+                    {this.props.children}
+                    </div>
+                );
+            } else {
+                return (
+                    <div>
+                        {menu}
+                        {this.props.children}
+                    </div>
+                );
+            }
         }
     }
 });

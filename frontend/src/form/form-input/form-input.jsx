@@ -331,7 +331,8 @@ let SelectFormInput = React.createClass({
 
                 <Select 
                     tags={basic.safeGet(detailContent, ['multi'], false)}
-					onSelect={this.handleChange}
+					onChange={this.handleChange}
+                    allowClear={true}
                     {...inputProps}
                     {...this.getAssignedAttrs()}>
 
