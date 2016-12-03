@@ -128,6 +128,21 @@ export let Page = React.createClass({
                 );
             }
 
+            var lft = null;
+            if (this.isMobile) {
+                lft = (
+                    <div style={{"marginTop": "-15px", "marginBottom": "10px"}}>
+                        <Lefter params={this.props.params} lefter={lefter} />
+                    </div>
+                );
+            } else {
+                lft = (
+                    <aside className="ant-layout-sider">
+                        <Lefter params={this.props.params} lefter={lefter} />
+                    </aside>
+                );
+            }
+
             return (
                 <div className="ant-layout-topaside">
                     <Avatar />
@@ -141,9 +156,7 @@ export let Page = React.createClass({
 
                     <div className="ant-layout-wrapper">
                     <div className="ant-layout-container">
-                        <aside className="ant-layout-sider">
-                            <Lefter params={this.props.params} lefter={lefter} />
-                        </aside>
+                        {lft}
                         <div className="ant-layout-content">
                             <div>
                             <div style={{clear: 'both'}}>

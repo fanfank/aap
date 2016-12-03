@@ -15,7 +15,7 @@ class G {
             },
         };
         this.loginedEventList = [];
-        this.mobile = window.location.href.indexOf("mobile=1") != -1 ? true : false;
+        this.mobile = navigator.userAgent.toLowerCase().indexOf("mobile") != -1 ? true : false;
         
         this.refreshUserInfo();
     }
