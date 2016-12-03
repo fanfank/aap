@@ -4,9 +4,10 @@
  */
 import React from 'react';
 
-import { Menu, Spin } from 'antd';
+import { Icon, Dropdown, Menu, Spin } from 'antd';
 
 import * as basic from '../../libs/basic.jsx';
+import G from "../../libs/global.jsx";
 
 import { Item } from '../item/item.jsx';
 
@@ -14,6 +15,7 @@ import { lefterCtl } from './controller.jsx'
 
 export let Lefter = React.createClass({
     getInitialState: function() {
+        this.isMobile = G.isMobile();
         return {
             lefterData: undefined,
             currentItemKey: undefined,
@@ -88,27 +90,44 @@ export let Lefter = React.createClass({
                 return null; 
             }
 
-            return (
-                // 展示侧边导航
-                <div>
-                    <Menu onClick={this.handleClick}
-                            selectedKeys={[this.state.currentItemKey]}
-                            mode="inline">
+            const menu = (
+                <Menu onClick={this.handleClick}
+                        selectedKeys={[this.state.currentItemKey]}
+                        mode="inline">
 
-                        {componentsContent['item'].map((itemKey) => {
-                            return (
-                                <Menu.Item key={itemKey}>
-                                    <Item 
-										registerPageItem={this.registerPageItem}
-										params={this.props.params} 
-										item={itemKey} />
-                                </Menu.Item>
-                            );
-                        })}
-                    </Menu>
-                    {this.props.children}
-                </div>
+                    {componentsContent['item'].map((itemKey) => {
+                        return (
+                            <Menu.Item key={itemKey}>
+                                <Item 
+									registerPageItem={this.registerPageItem}
+									params={this.props.params} 
+									item={itemKey} />
+                            </Menu.Item>
+                        );
+                    })}
+                </Menu>
             );
+
+            if (this.isMobile) {
+                return (
+                    <div>
+                        <Dropdown overlay={menu} trigger={['click']}>
+                            <a href="#">
+                                {"页面选项"} <Icon type="down" />
+                            </a>
+                        </Dropdown>
+                        {this.props.children}
+                    </div>
+                );
+            } else {
+                return (
+                    // 展示侧边导航
+                    <div>
+                        {menu}
+                        {this.props.children}
+                    </div>
+                );
+            }
         }
     }
 });

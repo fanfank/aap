@@ -41,7 +41,7 @@ let MAX_RUNE_NUM = 100 * 1024 / 2;
 
 export let TimecatPageContent = React.createClass({
     getInitialState: function() {
-        let content = DEFAULT_LOG_LIST.join("\n");
+        let content = DEFAULT_LOG_LIST.join("\n") + "\n";
         return {
             st: DEFAULT_ST,
             ed: DEFAULT_ED,

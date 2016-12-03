@@ -11,6 +11,7 @@ import { Header } from './header/header.jsx';
 import { Lefter } from './lefter/lefter.jsx';
 
 import * as basic from '../libs/basic.jsx';
+import G from "../libs/global.jsx";
 
 import { pageCtl } from './controller.jsx';
 
@@ -20,6 +21,7 @@ import * as contentProvider from '../custom/init.jsx';
 
 export let Page = React.createClass({
     getInitialState: function() {
+        this.isMobile = G.isMobile();
         return {
             'pageData': undefined,
             'contentProviderClass': undefined,
@@ -118,7 +120,7 @@ export let Page = React.createClass({
             let SubHeaderContent = null;
             if (subHeader) {
                 SubHeaderContent = (
-                    <div className="ant-layout-subheader">
+                    <div className={"ant-layout-subheader" + (this.isMobile ? "-mobile" : "")}>
                     <div className="ant-layout-wrapper">
                         <Header params={this.props.params} subHeader={subHeader} />
                     </div>
@@ -126,10 +128,26 @@ export let Page = React.createClass({
                 );
             }
 
+
+            var lft = null;
+            if (this.isMobile) {
+                lft = (
+                    <div style={{"marginTop": "-15px", "marginBottom": "10px"}}>
+                        <Lefter params={this.props.params} lefter={lefter} />
+                    </div>
+                );
+            } else {
+                lft = (
+                    <aside className="ant-layout-sider">
+                        <Lefter params={this.props.params} lefter={lefter} />
+                    </aside>
+                );
+            }
+
             return (
                 <div className="ant-layout-topaside">
                     <Avatar />
-                    <div className="ant-layout-header">
+                    <div className={"ant-layout-header" + (this.isMobile ? "-mobile": "")}>
                     <div className="ant-layout-wrapper">
                         <Header params={this.props.params} header={header} />
                     </div>
@@ -139,9 +157,7 @@ export let Page = React.createClass({
 
                     <div className="ant-layout-wrapper">
                     <div className="ant-layout-container">
-                        <aside className="ant-layout-sider">
-                            <Lefter params={this.props.params} lefter={lefter} />
-                        </aside>
+						{lft}
                         <div className="ant-layout-content">
                             <div>
                             <div style={{clear: 'both'}}>
