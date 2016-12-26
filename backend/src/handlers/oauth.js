@@ -7,8 +7,10 @@ var path = require("path");
 var ROOT_PATH = path.resolve(__dirname, '..');
 
 var basic = require(ROOT_PATH + '/libs/basic');
-var session = require(ROOT_PATH + "/libs/session");
-var oauthConf = require(ROOT_PATH + "/conf/oauth.secret");
+var session = require(ROOT_PATH + "/libs/session/session");
+var cipher = require(ROOT_PATH + "/libs/cipher");
+var settings = require(ROOT_PATH + "/conf/settings.secret");
+var oauthConf = settings.oauth || {};
 
 var sg = basic.safeGet;
 var lz = basic.lz;
@@ -18,6 +20,8 @@ var ACCESS_METHOD_GET  = ['GET'];
 var ACCESS_METHOD_POST = ['POST'];
 var ACCESS_METHOD_GET_POST = ['GET', 'POST'];
 var ACCESS_METHOD_ALL = ['GET', 'POST', 'OPTIONS'];
+
+var MAX_SESSION_TTL = 24 * 3600 * 14;
 
 exports.entrance = function(req, res, next) {
     var ifaceDict = {
@@ -94,21 +98,32 @@ function weiboAuthorize(req, res) {
             }
 
             // 设置session
-            session.set("weibo_" + data["uid"], data, sg(data, ["expires_in"], 24 * 3600));
-
-            // 设置cookie
-            // 待前端执行
-
-            jr(res, {
-                errno: 0,
-                errmsg: "success",
-                data: {
-                    "source": "weibo",
-                    "access_token": access_token,
-                    "expires_in": sg(data, ["expires_in"]),
-                    "uid": sg(data, ["uid"]),
-                },
+            session.set(
+                "weibo_" + data["uid"],
+                cipher.sha256(access_token),
+                Math.min(sg(data, ["expires_in"], 24 * 3600), MAX_SESSION_TTL)
+            ).then(function(session_res) {
+                // 设置cookie
+                // 待前端执行
+                jr(res, {
+                    errno: 0,
+                    errmsg: "success",
+                    data: {
+                        "source": "weibo",
+                        "access_token": access_token,
+                        "expires_in": sg(data, ["expires_in"]),
+                        "uid": sg(data, ["uid"]),
+                    },
+                });
+            }).catch(function(session_res) {
+                console.error(session_res);
+                jr(res, {
+                    errno: -2,
+                    errmsg: "session set failed",
+                    data: {},
+                });
             });
+
             return;
         }
     );
@@ -142,10 +157,10 @@ function getBasicUserInfo(req, res) {
     if (source == "weibo") {
         var uid = req.query.uid || req.body.uid;
         var access_token = req.query.access_token || req.body.access_token;
-        if (!uid || !access_token || !session.isValid({source:source, uid:uid, access_token:access_token})) {
+        if (!uid || !access_token) {
             jr(res, {
                 errno: -1,
-                errmsg: "invalid params or session expired",
+                errmsg: "invalid params",
                 data: {
                     uid: uid,
                     access_token: access_token || "",
@@ -154,46 +169,82 @@ function getBasicUserInfo(req, res) {
             return;
         }
 
-        var formData = {
-            uid: uid,
-            access_token: access_token,
-        };
-
-        request.get(
-            {
-                url: "https://api.weibo.com/2/users/show.json",
-                qs: formData,
-            },
-            function(error, response, body) {
-                var data = basic.decode(body, {"error_code": -1, "error": "unknown failure"});
-
-                var errno = sg(data, ["error_code"], 0);
-                var statusCode = sg(response, ["statusCode"], -999)
-                if (error || statusCode != 200 || errno != 0) {
-                    jr(res, {
-                        errno: -1,
-                        errmsg: "Get weibo user info failed, "
-                            + "error=[" + error + "], "
-                            + "status=[" + statusCode + "], "
-                            + "body=[" + body + "]",
-                    });
-                    return;
-                }
-
+        session.isValid({
+            source:source,
+            uid:uid,
+            access_token:access_token
+        }).then(function(session_res) {
+            if (!session_res) {
                 jr(res, {
-                    errno: 0,
-                    errmsg: "success",
+                    errno: -1,
+                    errmsg: "session invalid or out of date",
                     data: {
-                        uid: sg(data, ["id"], uid),
-                        uname: sg(data, ["screen_name"]) || sg(data, ["name"], ""),
-                        avatar: sg(data, ["profile_image_url"]),
-                        avatar_large: sg(data, ["avatar_large"]),
-                    },
+                        uid: uid,
+                        access_token: access_token || "",
+                    }
                 });
                 return;
             }
-        );
-        return;
+
+            var formData = {
+                uid: uid,
+                access_token: access_token,
+            };
+
+            request.get(
+                {
+                    url: "https://api.weibo.com/2/users/show.json",
+                    qs: formData,
+                },
+                function(error, response, body) {
+                    var data = basic.decode(
+                        body,
+                        {
+                            "error_code": -1,
+                            "error": "unknown failure"
+                        }
+                    );
+
+                    var errno = sg(data, ["error_code"], 0);
+                    var statusCode = sg(response, ["statusCode"], -999);
+                    if (error || statusCode != 200 || errno != 0) {
+                        jr(res, {
+                            errno: -1,
+                            errmsg: "Get weibo user info failed, "
+                                + "error=[" + error + "], "
+                                + "status=[" + statusCode + "], "
+                                + "body=[" + body + "]",
+                        });
+                        return;
+                    }
+
+                    jr(res, {
+                        errno: 0,
+                        errmsg: "success",
+                        data: {
+                            uid: sg(data, ["id"], uid),
+                            uname: sg(data, ["screen_name"]) || sg(data, ["name"], ""),
+                            avatar: sg(data, ["profile_image_url"]),
+                            avatar_large: sg(data, ["avatar_large"]),
+                        },
+                    });
+                    return;
+                }
+            );
+            return;
+
+        }).catch(function(session_res) {
+            console.error(session_res);
+            jr(res, {
+                errno: -9,
+                errmsg: "unknown server error",
+                data: {
+                    uid: uid,
+                    access_token: access_token || "",
+                }
+            });
+        });
+
     } else {
         jr(res, {
             errno: -2,
