@@ -7,7 +7,7 @@ var ROOT_PATH = path.resolve(__dirname, '..');
 
 var crypto = require("crypto");
 var basic = require("./basic");
-var settings = require(ROOT_PATH + "/conf/cipher.secret");
+var settings = require(ROOT_PATH + "/conf/settings.secret");
 var cipherConf = settings.cipher || {};
 
 function sha256(s) {
