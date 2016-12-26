@@ -393,7 +393,7 @@ let SelectFormSubInput = React.createClass({
 
                 <Select
                     tags={basic.safeGet(detailContent, ['multi'], false)}
-                    oncChange={this.handleChange}
+                    onChange={this.handleChange}
                     allowClear={true}
                     value={this.getCurrentValue()}
                     {...data['assignedAttrs']}>
