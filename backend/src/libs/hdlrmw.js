@@ -6,11 +6,12 @@ var path = require('path');
 var ROOT_PATH = path.resolve(__dirname, '..');
 
 var basic = require("./basic");
-var session = require("./session");
+var session = require("./session/session");
 
 var validationConf = {};
 try {
-    validationConf = require(ROOT_PATH + "/conf/validation.secret");
+    settings = require(ROOT_PATH + "/conf/settings.secret");
+    validationConf = basic.safeGet(settings, ["validation"], {});
 } catch(e) {
     validationConf = {};
 }

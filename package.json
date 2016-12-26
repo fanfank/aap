@@ -46,6 +46,7 @@
     "body-parser": "1.15.2",
     "cookie-parser": "1.4.3",
     "express": "4.14.0",
+    "memcached": "^2.2.2",
     "mysql": "2.11.1",
     "react": "15.0.2",
     "react-dom": "15.0.2",
